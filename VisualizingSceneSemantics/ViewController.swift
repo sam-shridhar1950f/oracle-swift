@@ -176,7 +176,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     
                     // Convert the face's center to world coordinates.
                     var centerLocalTransform = matrix_identity_float4x4
-                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace, 1)
+                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
                     let centerWorldPosition = (anchor.transform * centerLocalTransform).position
                      
                     // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
