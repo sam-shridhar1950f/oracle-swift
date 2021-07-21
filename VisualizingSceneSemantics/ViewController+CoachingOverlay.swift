@@ -8,6 +8,7 @@ View controller extension for the on-boarding experience.
 import UIKit
 import ARKit
 
+@available(iOS 14.0, *)
 extension ViewController: ARCoachingOverlayViewDelegate {
     
     func coachingOverlayViewWillActivate(_ coachingOverlayView: ARCoachingOverlayView) {

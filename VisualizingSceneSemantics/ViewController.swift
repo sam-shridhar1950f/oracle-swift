@@ -1,13 +1,18 @@
 /*
 See LICENSE folder for this sample’s licensing information.
-
 Abstract:
 Main view controller for the AR experience.
 */
 
 import RealityKit
 import ARKit
+import AVFoundation
+import UIKit
 
+
+var setDist:Float = 0.0
+
+@available(iOS 14.0, *)
 class ViewController: UIViewController, ARSessionDelegate {
     
     @IBOutlet var arView: ARView!
@@ -46,6 +51,10 @@ class ViewController: UIViewController, ARSessionDelegate {
         // ARView on its own does not turn on mesh classification.
         arView.automaticallyConfigureSession = false
         let configuration = ARWorldTrackingConfiguration()
+        if type(of: configuration).supportsFrameSemantics(.sceneDepth) {
+           // Activate sceneDepth
+           configuration.frameSemantics = .sceneDepth
+        }
         configuration.sceneReconstruction = .meshWithClassification
 
         configuration.environmentTexturing = .automatic
@@ -139,7 +148,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     /// - Tag: TogglePlaneDetection
-    @IBAction func togglePlaneDetectionButtonPressed(_ button: UIButton) {
+    @IBAction func togglePlaneDetectionButtonPressed(_ button: UIButton) { // start plane detection
         guard let configuration = arView.session.configuration as? ARWorldTrackingConfiguration else {
             return
         }
@@ -181,9 +190,11 @@ class ViewController: UIViewController, ARSessionDelegate {
                      
                     // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
                     let distanceToFace = distance(centerWorldPosition, location)
+                    
                     if distanceToFace <= 0.05 {
+                        setDist = distanceToFace
                         // Get the semantic classification of the face and finish the search.
-                        let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
+                        let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index) // the classification
                         completionBlock(centerWorldPosition, classification)
                         return
                     }
@@ -195,7 +206,9 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
     }
     
-    func session(_ session: ARSession, didFailWithError error: Error) {
+    func session(_ session: ARSession, didFailWithError error: Error) { // error handling
+        guard let depthData = arView.session.currentFrame?.sceneDepth else { return  }
+        
         guard error is ARError else { return }
         let errorWithInfo = error as NSError
         let messages = [
@@ -216,10 +229,23 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
     }
         
-    func model(for classification: ARMeshClassification) -> ModelEntity {
+    func model(for classification: ARMeshClassification) -> ModelEntity { // Replace this code with audio call out algorithm
         // Return cached model if available
+        guard let depthData = arView.session.currentFrame?.sceneDepth else { fatalError("Wut Da Dab") }
         if let model = modelsForClassification[classification] {
             model.transform = .identity
+            if classification.description != "None" {
+            var utterance = AVSpeechUtterance(string: classification.description)
+           
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                print(setDist)
+                print(depthData)
+                let synthesizer = AVSpeechSynthesizer()
+                synthesizer.speak(utterance)
+            }
+
+            
+            // synthesizer.continueSpeaking() // Resume a paused speech
             return model.clone(recursive: true)
         }
         
@@ -233,6 +259,19 @@ class ViewController: UIViewController, ARSessionDelegate {
         model.position.x -= model.visualBounds(relativeTo: nil).extents.x / 2
         // Add model to cache
         modelsForClassification[classification] = model
+        
+        if classification.description != "None" {
+        var utterance = AVSpeechUtterance(string: classification.description)
+       
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+        
+        print(depthData)
+        print(setDist)
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+        // synthesizer.continueSpeaking() // Resume a paused speech
+        }
+        
         return model
     }
     
@@ -241,5 +280,20 @@ class ViewController: UIViewController, ARSessionDelegate {
         // Move sphere up by half its diameter so that it does not intersect with the mesh
         sphere.position.y = radius
         return sphere
+    }
+    
+    @IBAction func didTapButton(){
+        present(ViewController2(),animated: true)
+    }
+}
+
+class ViewController2: UIViewController, ARSessionDelegate{
+    var session: ARSession!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    
+        session = ARSession()
+        session.delegate = self
     }
 }
