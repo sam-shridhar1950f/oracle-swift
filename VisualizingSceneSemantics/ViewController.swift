@@ -231,7 +231,24 @@ class ViewController: UIViewController, ARSessionDelegate {
         
     func model(for classification: ARMeshClassification) -> ModelEntity { // Replace this code with audio call out algorithm
         // Return cached model if available
-        guard let depthData = arView.session.currentFrame?.sceneDepth else { fatalError("Wut Da Dab") }
+        guard let depthData = arView.session.currentFrame?.sceneDepth?.depthMap else { fatalError("Wut Da Dab") }
+        
+        // Useful data
+        
+            let width = CVPixelBufferGetWidth(depthData) //768 on an iPhone 7+
+            let height = CVPixelBufferGetHeight(depthData) //576 on an iPhone 7+
+            CVPixelBufferLockBaseAddress(depthData, CVPixelBufferLockFlags(rawValue: 0))
+
+            // Convert the base address to a safe pointer of the appropriate type
+            let floatBuffer = unsafeBitCast(CVPixelBufferGetBaseAddress(depthData), to: UnsafeMutablePointer<Float32>.self)
+
+            // Read the data (returns value of type Float)
+            // Accessible values : (width-1) * (height-1) = 767 * 575
+
+            let distanceAtXYPoint = floatBuffer[Int(128 * 96)] // x and y is x,y coordinate
+
+        
+        
         if let model = modelsForClassification[classification] {
             model.transform = .identity
             if classification.description != "None" {
@@ -240,6 +257,7 @@ class ViewController: UIViewController, ARSessionDelegate {
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                 print(setDist)
                 print(depthData)
+                print(distanceAtXYPoint)
                 let synthesizer = AVSpeechSynthesizer()
                 synthesizer.speak(utterance)
             }
@@ -267,6 +285,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         print(depthData)
         print(setDist)
+        print(distanceAtXYPoint)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
         // synthesizer.continueSpeaking() // Resume a paused speech
