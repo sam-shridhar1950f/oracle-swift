@@ -11,6 +11,7 @@ import UIKit
 
 
 var setDist:Float = 0.0
+var coords: CGPoint!
 
 @available(iOS 14.0, *)
 class ViewController: UIViewController, ARSessionDelegate {
@@ -86,6 +87,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         // 1. Perform a ray cast against the mesh.
         // Note: Ray-cast option ".estimatedPlane" with alignment ".any" also takes the mesh into account.
         let tapLocation = sender.location(in: arView)
+        coords = tapLocation
         if let result = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .any).first {
             // ...
             // 2. Visualize the intersection point of the ray with the real-world surface.
@@ -231,12 +233,12 @@ class ViewController: UIViewController, ARSessionDelegate {
         
     func model(for classification: ARMeshClassification) -> ModelEntity { // Replace this code with audio call out algorithm
         // Return cached model if available
-        guard let depthData = arView.session.currentFrame?.sceneDepth?.depthMap else { fatalError("Wut Da Dab") }
+        guard let depthData = arView.session.currentFrame?.sceneDepth?.depthMap else { fatalError("Depth Map Creation Failed") }
         
         // Useful data
         
-            let width = CVPixelBufferGetWidth(depthData) //768 on an iPhone 7+
-            let height = CVPixelBufferGetHeight(depthData) //576 on an iPhone 7+
+          //  let width = CVPixelBufferGetWidth(depthData) // for iPhone 12
+        // let height = CVPixelBufferGetHeight(depthData) // for iPhone 12
             CVPixelBufferLockBaseAddress(depthData, CVPixelBufferLockFlags(rawValue: 0))
 
             // Convert the base address to a safe pointer of the appropriate type
@@ -245,18 +247,18 @@ class ViewController: UIViewController, ARSessionDelegate {
             // Read the data (returns value of type Float)
             // Accessible values : (width-1) * (height-1) = 767 * 575
 
-            let distanceAtXYPoint = floatBuffer[Int(128 * 96)] // x and y is x,y coordinate
+        let distanceAtXYPoint = floatBuffer[Int(coords.x * coords.y)] // x and y is x,y coordinate
 
         
         
         if let model = modelsForClassification[classification] {
             model.transform = .identity
             if classification.description != "None" {
-            var utterance = AVSpeechUtterance(string: classification.description)
+            var utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
            
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                print(setDist)
-                print(depthData)
+                //print(setDist)
+                //print(depthData)
                 print(distanceAtXYPoint)
                 let synthesizer = AVSpeechSynthesizer()
                 synthesizer.speak(utterance)
@@ -283,9 +285,10 @@ class ViewController: UIViewController, ARSessionDelegate {
        
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
         
-        print(depthData)
-        print(setDist)
+        //print(depthData)
+        //print(setDist)
         print(distanceAtXYPoint)
+        print(coords)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
         // synthesizer.continueSpeaking() // Resume a paused speech
