@@ -86,6 +86,8 @@ class ViewController: UIViewController, ARSessionDelegate {
         // 1. Perform a ray cast against the mesh.
         // Note: Ray-cast option ".estimatedPlane" with alignment ".any" also takes the mesh into account.
         let tapLocation = sender.location(in: arView)
+        print("tap location: ")
+        print(tapLocation)
         if let result = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .any).first {
             // ...
             // 2. Visualize the intersection point of the ray with the real-world surface.
