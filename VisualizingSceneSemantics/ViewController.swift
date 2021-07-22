@@ -231,6 +231,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         
     func model(for classification: ARMeshClassification) -> ModelEntity { // Replace this code with audio call out algorithm
         // Return cached model if available
+        // dimensions: 256 x 192
         guard let depthData = arView.session.currentFrame?.sceneDepth?.depthMap else { fatalError("Wut Da Dab") }
         
         // Useful data
@@ -252,11 +253,11 @@ class ViewController: UIViewController, ARSessionDelegate {
         if let model = modelsForClassification[classification] {
             model.transform = .identity
             if classification.description != "None" {
-            var utterance = AVSpeechUtterance(string: classification.description)
+            var utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
            
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                print(setDist)
-                print(depthData)
+                //print(setDist)
+                //print(depthData)
                 print(distanceAtXYPoint)
                 let synthesizer = AVSpeechSynthesizer()
                 synthesizer.speak(utterance)
@@ -279,12 +280,12 @@ class ViewController: UIViewController, ARSessionDelegate {
         modelsForClassification[classification] = model
         
         if classification.description != "None" {
-        var utterance = AVSpeechUtterance(string: classification.description)
+        var utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
        
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
         
-        print(depthData)
-        print(setDist)
+       // print(depthData)
+       // print(setDist)
         print(distanceAtXYPoint)
         let synthesizer = AVSpeechSynthesizer()
         synthesizer.speak(utterance)
