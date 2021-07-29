@@ -49,6 +49,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         // Manually configure what kind of AR session to run since
         // ARView on its own does not turn on mesh classification.
+      
         arView.automaticallyConfigureSession = false
         let configuration = ARWorldTrackingConfiguration()
         if type(of: configuration).supportsFrameSemantics(.sceneDepth) {
@@ -58,10 +59,28 @@ class ViewController: UIViewController, ARSessionDelegate {
         configuration.sceneReconstruction = .meshWithClassification
 
         configuration.environmentTexturing = .automatic
-        arView.session.run(configuration)
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        arView.addGestureRecognizer(tapRecognizer)
+        DispatchQueue.global(qos: .background).async {
+            print("WIBABBABABB")
+            
+            print("DaBby \(Thread.current)")
+            configuration.planeDetection = [.horizontal, .vertical]
+            self.arView.session.run(configuration)
+        }
+       
+    /// let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+     ///arView.addGestureRecognizer(tapRecognizer)
+       // sleep(5000)
+       
+            
+            //sleep(5000)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+            print("DaBaby \(Thread.current)")
+            self.startDetection()
+        })
+        
+        
+        ///self.arView.session.run(configuration)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,6 +96,65 @@ class ViewController: UIViewController, ARSessionDelegate {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+    @objc
+    func startDetection() {
+            // (168.0, 368.6666564941406) approx middle
+            let location = CGPoint(x: 168.0, y: 368.6666564941406)
+            print(location)
+            print("ahh")
+        let result = arView.raycast(from: location, allowing: .existingPlaneInfinite, alignment: .any)
+            print(result)
+            if let result = arView.raycast(from: location, allowing: .estimatedPlane, alignment: .any).first {
+                
+                // ...
+                // 2. Visualize the intersection point of the ray with the real-world surface.
+                let resultAnchor = AnchorEntity(world: result.worldTransform)
+                resultAnchor.addChild(sphere(radius: 0.01, color: .lightGray))
+                arView.scene.addAnchor(resultAnchor, removeAfter: 3)
+
+                // 3. Try to get a classification near the tap location.
+                //    Classifications are available per face (in the geometric sense, not human faces).
+                
+                nearbyFaceWithClassification(to: result.worldTransform.position) { (centerOfFace, classification) in print(classification)
+                    // ...
+                    print("waa")
+                        print("something")
+                        // 4. Compute a position for the text which is near the result location, but offset 10 cm
+                        // towards the camera (along the ray) to minimize unintentional occlusions of the text by the mesh.
+                        let rayDirection = normalize(result.worldTransform.position - self.arView.cameraTransform.translation)
+                        let textPositionInWorldCoordinates = result.worldTransform.position - (rayDirection * 0.1)
+                        
+                        // 5. Create a 3D text to visualize the classification result.
+                        let textEntity = self.model(for: classification)
+
+                        // 6. Scale the text depending on the distance, such that it always appears with
+                        //    the same size on screen.
+                        let raycastDistance = distance(result.worldTransform.position, self.arView.cameraTransform.translation)
+                        textEntity.scale = .one * raycastDistance
+
+                        // 7. Place the text, facing the camera.
+                        var resultWithCameraOrientation = self.arView.cameraTransform
+                        resultWithCameraOrientation.translation = textPositionInWorldCoordinates
+                        let textAnchor = AnchorEntity(world: resultWithCameraOrientation.matrix)
+                        textAnchor.addChild(textEntity)
+                        self.arView.scene.addAnchor(textAnchor, removeAfter: 3)
+
+                        // 8. Visualize the center of the face (if any was found) for three seconds.
+                        //    It is possible that this is nil, e.g. if there was no face close enough to the tap location.
+                        if let centerOfFace = centerOfFace {
+                            let faceAnchor = AnchorEntity(world: centerOfFace)
+                            faceAnchor.addChild(self.sphere(radius: 0.01, color: classification.color))
+                            self.arView.scene.addAnchor(faceAnchor, removeAfter: 3)
+                        
+                    }
+                }
+            } else {
+                print("WIBBBAA")
+            }
+            
+        }
+
     
     /// Places virtual-text of the classification at the touch-location's real-world intersection with a mesh.
     /// Note - because classification of the tapped-mesh is retrieved asynchronously, we visualize the intersection
@@ -209,7 +287,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didFailWithError error: Error) { // error handling
-        guard let depthData = arView.session.currentFrame?.sceneDepth else { return  }
+        // guard let depthData = arView.session.currentFrame?.sceneDepth else { return  }
         
         guard error is ARError else { return }
         let errorWithInfo = error as NSError
@@ -238,8 +316,8 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         // Useful data
         
-            let width = CVPixelBufferGetWidth(depthData) //768 on an iPhone 7+
-            let height = CVPixelBufferGetHeight(depthData) //576 on an iPhone 7+
+            // let width = CVPixelBufferGetWidth(depthData) //768 on an iPhone 7+
+            // let height = CVPixelBufferGetHeight(depthData) //576 on an iPhone 7+
             CVPixelBufferLockBaseAddress(depthData, CVPixelBufferLockFlags(rawValue: 0))
 
             // Convert the base address to a safe pointer of the appropriate type
@@ -248,14 +326,14 @@ class ViewController: UIViewController, ARSessionDelegate {
             // Read the data (returns value of type Float)
             // Accessible values : (width-1) * (height-1) = 767 * 575
 
-            let distanceAtXYPoint = floatBuffer[Int(128 * 96)] // x and y is x,y coordinate
+        let distanceAtXYPoint = round(floatBuffer[Int(128 * 96)] * 10) / 10.0 // x and y is x,y coordinate
 
         
         
         if let model = modelsForClassification[classification] {
             model.transform = .identity
             if classification.description != "None" {
-            var utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
+            let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
            
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                 //print(setDist)
@@ -282,7 +360,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         modelsForClassification[classification] = model
         
         if classification.description != "None" {
-        var utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
+        let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
        
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
         
