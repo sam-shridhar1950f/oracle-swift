@@ -74,9 +74,18 @@ class ViewController: UIViewController, ARSessionDelegate {
        
             
             //sleep(5000)
+       
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
             print("DaBaby \(Thread.current)")
-            self.startDetection()
+          
+            let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.startDetection), userInfo: nil, repeats: true)
+            
+                // self.startDetection()
+//                sleep(2000)
+                
+                
+            
+            
         })
         
         
