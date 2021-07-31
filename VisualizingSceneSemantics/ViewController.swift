@@ -26,7 +26,21 @@ struct XYPoint {
 }
 
 struct SectionClassificationObject {
+    var direction: String
+    var coord: XYPoint
+    var distance: Double
     
+    func getDirection() -> String {
+        return direction
+    }
+    
+    func getCoord() -> XYPoint {
+        return coord
+    }
+    
+    func getDistance() -> Double {
+        return distance
+    }
 }
 
 @available(iOS 14.0, *)
