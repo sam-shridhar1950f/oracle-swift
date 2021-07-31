@@ -408,3 +408,11 @@ class ViewController2: UIViewController, ARSessionDelegate{
         session.delegate = self
     }
 }
+
+class XYPoint {
+    
+}
+
+class SectionClassificationObject {
+    
+}
