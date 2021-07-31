@@ -12,8 +12,27 @@ import UIKit
 
 var setDist:Float = 0.0
 
+struct XYPoint {
+    var xVal: Double
+    var yVal: Double
+    
+    func getX() -> Double {
+        return xVal
+    }
+    
+    func getY() -> Double {
+        return yVal
+    }
+}
+
+struct SectionClassificationObject {
+    
+}
+
 @available(iOS 14.0, *)
 class ViewController: UIViewController, ARSessionDelegate {
+    
+    
     
     @IBOutlet var arView: ARView!
     @IBOutlet weak var hideMeshButton: UIButton!
@@ -409,10 +428,10 @@ class ViewController2: UIViewController, ARSessionDelegate{
     }
 }
 
-class XYPoint {
-    
-}
-
-class SectionClassificationObject {
-    
-}
+//class XYPoint {
+//
+//}
+//
+//class SectionClassificationObject {
+//
+//}
