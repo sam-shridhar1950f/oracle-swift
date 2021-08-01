@@ -12,6 +12,7 @@ import UIKit
 
 var setDist:Float = 0.0
 var points = [XYPoint]()
+var objects = [SectionClassificationObject]()
 
 struct XYPoint {
     var xVal: Double
@@ -171,14 +172,51 @@ class ViewController: UIViewController, ARSessionDelegate {
     @objc
     func startDetectionHelper() {
         
-        for i in 0...points.count {
-            var coord: XYPoint = points[i]
-            startDetection(coord: coord)
+        GeneratePoints(a: 3, b: 3)
+        for i in 0...points.count - 1 {
+            let coord: XYPoint = points[i]
+            startDetection(coord: coord, completionHandler: { obj in
+                
+                  //  print("test")
+//                    objects.append(obj)
+                print(obj)
+                print("waaajj")
+                print(objects)
+                let newObjects = objects.sorted {$0.distance < $1.distance}
+                let classification = newObjects[0].classification
+                let dist = newObjects[0].distance
+                if classification != "" {
+                    let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
+                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                    let synthesizer = AVSpeechSynthesizer()
+                    synthesizer.speak(utterance)
+                }
+                objects.removeAll()
+                
+                
+
+            })
         }
+        
+        
+    }
+    
+    
+    
+    func hierarchy() {
+        // return distance and classification from startDetection --
+        // if floor --> no utterance. Anything else --> closest object gets priority and is called out
+        // insert into startDetectionHelper()
+    }
+    
+    
+    func proximityToCenter() {
+        // find coordinates of the center and shoot a raycast. find the distance.
+        // find distance from center, use magnitude to determine direction
     }
     
     // @objc
-    func startDetection(coord: XYPoint) {
+    func startDetection(coord: XYPoint, completionHandler: @escaping (SectionClassificationObject) -> Void) {
             // (168.0, 368.6666564941406) approx middle
         let location = CGPoint(x: coord.getX(), y: coord.getY())
             print(location)
@@ -233,8 +271,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                         // construct classification object:
-                        var obj = SectionClassificationObject(direction: "wip", coord: coord, distance: distanceAtXYPoint, classification: _classification)
-                        
+                        let obj = SectionClassificationObject(direction: "wip", coord: coord, distance: distanceAtXYPoint, classification: _classification)
+                        objects.append(obj)
+                        completionHandler(obj)
                     }
                 }
                 
@@ -421,16 +460,16 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         if let model = modelsForClassification[classification] {
             model.transform = .identity
-            if classification.description != "None" {
-            let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
-           
-            utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                //print(setDist)
-                //print(depthData)
-                print(distanceAtXYPoint)
-                let synthesizer = AVSpeechSynthesizer()
-                synthesizer.speak(utterance)
-            }
+//            if classification.description != "None" {
+//            let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
+//
+//            utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+//                //print(setDist)
+//                //print(depthData)
+//                print(distanceAtXYPoint)
+//                let synthesizer = AVSpeechSynthesizer()
+//                synthesizer.speak(utterance)
+//            }
 
             
             // synthesizer.continueSpeaking() // Resume a paused speech
@@ -450,18 +489,18 @@ class ViewController: UIViewController, ARSessionDelegate {
 //        // Add model to cache
 //        modelsForClassification[classification] = model
         
-        if classification.description != "None" {
-        let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
-       
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-        
-       // print(depthData)
-       // print(setDist)
-        print(distanceAtXYPoint)
-        let synthesizer = AVSpeechSynthesizer()
-        synthesizer.speak(utterance)
-        // synthesizer.continueSpeaking() // Resume a paused speech
-        }
+//        if classification.description != "None" {
+//        let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
+//
+//        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+//
+//       // print(depthData)
+//       // print(setDist)
+//        print(distanceAtXYPoint)
+//        let synthesizer = AVSpeechSynthesizer()
+//        synthesizer.speak(utterance)
+//        // synthesizer.continueSpeaking() // Resume a paused speech
+//        }
         
 //        return model
         return (Double(distanceAtXYPoint), classification.description)
