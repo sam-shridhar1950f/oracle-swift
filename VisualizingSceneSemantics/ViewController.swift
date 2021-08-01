@@ -30,6 +30,7 @@ struct SectionClassificationObject {
     var direction: String
     var coord: XYPoint
     var distance: Double
+    var classification: String
     
     func getDirection() -> String {
         return direction
@@ -41,6 +42,10 @@ struct SectionClassificationObject {
     
     func getDistance() -> Double {
         return distance
+    }
+    
+    func getClassification() -> String {
+        return classification
     }
 }
 
@@ -135,10 +140,10 @@ class ViewController: UIViewController, ARSessionDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
             print("DaBaby \(Thread.current)")
           
-            let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.startDetection), userInfo: nil, repeats: true)
+            let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.startDetectionHelper), userInfo: nil, repeats: true)
             
                 // self.startDetection()
-//                sleep(2000)
+//                sleep(2000)s
                 
                 
             
@@ -163,17 +168,19 @@ class ViewController: UIViewController, ARSessionDelegate {
         return true
     }
     
+    @objc
     func startDetectionHelper() {
         
-        for i in 0...points.length {
-            
+        for i in 0...points.count {
+            var coord: XYPoint = points[i]
+            startDetection(coord: coord)
         }
     }
     
-    @objc
-    func startDetection() {
+    // @objc
+    func startDetection(coord: XYPoint) {
             // (168.0, 368.6666564941406) approx middle
-        let location = CGPoint(x: 390.0, y: 840.0)
+        let location = CGPoint(x: coord.getX(), y: coord.getY())
             print(location)
             print("ahh")
         let result = arView.raycast(from: location, allowing: .existingPlaneInfinite, alignment: .any)
@@ -201,7 +208,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                         let textPositionInWorldCoordinates = result.worldTransform.position - (rayDirection * 0.1)
                         
                         // 5. Create a 3D text to visualize the classification result.
-                        self.model(for: classification)
+                        let result = self.model(for: classification)
+                        let distanceAtXYPoint = result.0
+                        let _classification = result.1
 
                         // 6. Scale the text depending on the distance, such that it always appears with
                         //    the same size on screen.
@@ -222,8 +231,13 @@ class ViewController: UIViewController, ARSessionDelegate {
                             faceAnchor.addChild(self.sphere(radius: 0.01, color: classification.color))
                             self.arView.scene.addAnchor(faceAnchor, removeAfter: 3)
                         }
+                        
+                        // construct classification object:
+                        var obj = SectionClassificationObject(direction: "wip", coord: coord, distance: distanceAtXYPoint, classification: _classification)
+                        
                     }
                 }
+                
             } else {
                 print("WIBBBAA")
             }
@@ -384,7 +398,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
     }
         
-    func model(for classification: ARMeshClassification) -> Void { // Replace this code with audio call out algorithm
+    func model(for classification: ARMeshClassification) -> (Double, String) { // Replace this code with audio call out algorithm
         // Return cached model if available
         // dimensions: 256 x 192
         guard let depthData = arView.session.currentFrame?.sceneDepth?.depthMap else { fatalError("Wut Da Dab") }
@@ -421,6 +435,8 @@ class ViewController: UIViewController, ARSessionDelegate {
             
             // synthesizer.continueSpeaking() // Resume a paused speech
 //            return model.clone(recursive: true)
+            
+            return (Double(distanceAtXYPoint), classification.description)
         }
         
         // Generate 3D text for the classification
@@ -448,6 +464,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
         
 //        return model
+        return (Double(distanceAtXYPoint), classification.description)
     }
     
     func sphere(radius: Float, color: UIColor) -> ModelEntity {
