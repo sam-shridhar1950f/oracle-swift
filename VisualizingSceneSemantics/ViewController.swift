@@ -11,6 +11,7 @@ import UIKit
 
 
 var setDist:Float = 0.0
+var points = [XYPoint]()
 
 struct XYPoint {
     var xVal: Double
@@ -43,6 +44,26 @@ struct SectionClassificationObject {
     }
 }
 
+func GeneratePoints(a: Int, b: Int) { //a is number of horizontaala boxes and b is number of vertical squaraes
+    let width = 390
+    let height = 840
+    //create array here
+    // var points = [XYPoint]()
+    var x : Double = Double(1/2 * width * (1/a))
+    var y : Double = Double(1/2 * height * (1/b))
+    
+    for _ in 1...a {
+        for _ in 1...b {
+            points.append(XYPoint(xVal: x, yVal: y))
+            x += Double(width/a)
+        }
+        x = Double(1/2 * width * (1/a))
+        y += Double(height/b)
+    }
+    
+    
+}
+
 @available(iOS 14.0, *)
 class ViewController: UIViewController, ARSessionDelegate {
     
@@ -52,6 +73,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     @IBOutlet weak var hideMeshButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var planeDetectionButton: UIButton!
+    
     
     let coachingOverlay = ARCoachingOverlayView()
     
@@ -95,11 +117,13 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         DispatchQueue.global(qos: .background).async {
             print("WIBABBABABB")
-            
             print("DaBby \(Thread.current)")
             configuration.planeDetection = [.horizontal, .vertical]
+//            print(configuration.planeDetection.)
             self.arView.session.run(configuration)
+            
         }
+        
        
     /// let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
      ///arView.addGestureRecognizer(tapRecognizer)
@@ -139,10 +163,17 @@ class ViewController: UIViewController, ARSessionDelegate {
         return true
     }
     
+    func startDetectionHelper() {
+        
+        for i in 0...points.length {
+            
+        }
+    }
+    
     @objc
     func startDetection() {
             // (168.0, 368.6666564941406) approx middle
-            let location = CGPoint(x: 168.0, y: 368.6666564941406)
+        let location = CGPoint(x: 390.0, y: 840.0)
             print(location)
             print("ahh")
         let result = arView.raycast(from: location, allowing: .existingPlaneInfinite, alignment: .any)
