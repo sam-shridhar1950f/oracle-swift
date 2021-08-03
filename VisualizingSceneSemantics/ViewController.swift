@@ -182,6 +182,13 @@ class ViewController: UIViewController, ARSessionDelegate {
                 print(obj)
                 print("waaajj")
                 print(objects)
+                
+                
+                
+
+            })
+            if objects.count == points.count {
+                print("yesssir")
                 let newObjects = objects.sorted {$0.distance < $1.distance}
                 let classification = newObjects[0].classification
                 let dist = newObjects[0].distance
@@ -192,11 +199,11 @@ class ViewController: UIViewController, ARSessionDelegate {
                     synthesizer.speak(utterance)
                 }
                 objects.removeAll()
-                
-                
-
-            })
+                break
+            }
         }
+        
+        
         
         
     }
