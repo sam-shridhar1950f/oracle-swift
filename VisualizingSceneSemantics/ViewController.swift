@@ -183,34 +183,33 @@ class ViewController: UIViewController, ARSessionDelegate {
         points = GeneratePoints(a: 3, b: 3, array: &points)
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
-            startDetection(coord: coord, completionHandler: { 
-                
-             //   objects.append(obj)
-//
-                
-                
-                
-                
-
-            })
-            print(points.count)
-            print(objects.count)
-            if objects.count == points.count {
-                print("WABABGGAB")
-                let newObjects = objects.sorted {$0.distance < $1.distance}
-                let classification = newObjects[0].classification
-                let dist = round(newObjects[0].distance * 10) / 10.0
-                print(classification)
-                if classification != "" {
+            startDetection(coord: coord, completionHandler: {
+                if objects.count == points.count {
+                    print("WABABGGAB")
+                    var newObj:SectionClassificationObject = objects[0]
+                    let newObjects = objects.sorted {$0.distance < $1.distance}
+                    for i in 0...newObjects.count - 1 {
+                        if newObjects[i].classification != "None" && newObjects[i].classification != ""{
+                            newObj = newObjects[i]
+                            break
+                        }
+                        
+                    }
+                    let classification = newObj.classification
+                    let dist = round(newObj.distance * 10) / 10.0
                     print(classification)
-                    let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
-                    utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                    let synthesizer = AVSpeechSynthesizer()
-                    synthesizer.speak(utterance)
+                    if classification != "" {
+                        print(classification)
+                        let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
+                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                        let synthesizer = AVSpeechSynthesizer()
+                        synthesizer.speak(utterance)
+                    }
                 }
-            } else {
-                continue
-            }
+            })
+            // print(points.count)
+           print(objects.count)
+             
         }
         
         
@@ -288,6 +287,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                         // construct classification object:
                         let obj = SectionClassificationObject(direction: "wip", coord: coord, distance: distanceAtXYPoint, classification: _classification)
                         objects.append(obj)
+                        print(objects.count)
+                        print(obj.classification)
                         completionHandler()
                     }
                 }
