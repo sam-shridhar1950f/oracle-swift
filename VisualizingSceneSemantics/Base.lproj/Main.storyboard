@@ -92,7 +92,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.92307692307691" y="133.64928909952607"/>
+            <point key="canvasLocation" x="135.38461538461539" y="133.64928909952607"/>
+        </scene>
+        <!--View Controller2-->
+        <scene sceneID="OyK-cg-gZo">
+            <objects>
+                <viewController storyboardIdentifier="settings" id="dkh-Oc-rWn" customClass="ViewController2" customModule="Scene_Semantics" customModuleProvider="target" sceneMemberID="viewController">
+                    <textField key="view" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="vc2-lB-eeK">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="56I-Cp-SMM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1009" y="134"/>
         </scene>
     </scenes>
     <designables>

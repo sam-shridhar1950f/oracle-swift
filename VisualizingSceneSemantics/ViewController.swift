@@ -94,6 +94,7 @@ class ViewController: UIViewController, ARSessionDelegate {
 
     /// - Tag: ViewDidLoad
     override func viewDidLoad() {
+
         super.viewDidLoad()
         
         arView.session.delegate = self
@@ -289,6 +290,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                         objects.append(obj)
                         print(objects.count)
                         print(obj.classification)
+                        
                         completionHandler()
                     }
                 }
@@ -529,21 +531,23 @@ class ViewController: UIViewController, ARSessionDelegate {
         return sphere
     }
     
-    @IBAction func didTapButton(){
-        present(ViewController2(),animated: true)
+  @IBAction func didTapButton(){
+    guard let vc = storyboard?.instantiateViewController(identifier: "settings") as? ViewController2 else {
+        return
     }
+    present(vc, animated: true)
+   }
 }
 
-class ViewController2: UIViewController, ARSessionDelegate{
-    var session: ARSession!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    
-        session = ARSession()
-        session.delegate = self
-    }
-}
+//class ViewController2: UIViewController, ARSessionDelegate{
+//    var session: ARSession!
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        view.backgroundColor = .blue
+//    }
+//}
 
 //class XYPoint {
 //

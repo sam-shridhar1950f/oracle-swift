@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C26373623E065EB0017A846 /* ViewController+CoachingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */; };
+		2033887526BB7A840091BF46 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2033887426BB7A840091BF46 /* ViewController2.swift */; };
 		E136398023EB064300668585 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136397F23EB064300668585 /* RoundedButton.swift */; };
 		E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */; };
 		E1635E1823D5BDFD0031A7D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1723D5BDFD0031A7D8 /* ViewController.swift */; };
@@ -15,11 +16,16 @@
 		E1635E1F23D5BDFE0031A7D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1635E1E23D5BDFE0031A7D8 /* Assets.xcassets */; };
 		E1635E2223D5BDFE0031A7D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1635E2023D5BDFE0031A7D8 /* LaunchScreen.storyboard */; };
 		E1635E2E23D736E70031A7D8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E2D23D736E70031A7D8 /* Extensions.swift */; };
+		E83E0EA176CDA7EAF1DF80C4 /* Pods_VisualizingSceneSemantics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AF8D17AB6CCB8DE115896AD /* Pods_VisualizingSceneSemantics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+CoachingOverlay.swift"; sourceTree = "<group>"; };
+		2033887426BB7A840091BF46 /* ViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
 		28811F3E4EB27EC6196B6F5B /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		296F6355C2C9EB3D423AFD2B /* Pods-VisualizingSceneSemantics.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualizingSceneSemantics.release.xcconfig"; path = "Target Support Files/Pods-VisualizingSceneSemantics/Pods-VisualizingSceneSemantics.release.xcconfig"; sourceTree = "<group>"; };
+		3AF8D17AB6CCB8DE115896AD /* Pods_VisualizingSceneSemantics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualizingSceneSemantics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B36198373F93F8ADF5E6E230 /* Pods-VisualizingSceneSemantics.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualizingSceneSemantics.debug.xcconfig"; path = "Target Support Files/Pods-VisualizingSceneSemantics/Pods-VisualizingSceneSemantics.debug.xcconfig"; sourceTree = "<group>"; };
 		E136397F23EB064300668585 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		E1635E1223D5BDFD0031A7D8 /* Scene Semantics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene Semantics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E83E0EA176CDA7EAF1DF80C4 /* Pods_VisualizingSceneSemantics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,6 +58,16 @@
 			path = LICENSE;
 			sourceTree = "<group>";
 		};
+		1604D216F5E1AEAF173B9F61 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B36198373F93F8ADF5E6E230 /* Pods-VisualizingSceneSemantics.debug.xcconfig */,
+				296F6355C2C9EB3D423AFD2B /* Pods-VisualizingSceneSemantics.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		E1635E0923D5BDFD0031A7D8 = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +75,8 @@
 				E1635E1323D5BDFD0031A7D8 /* Products */,
 				EA0E67A9F6B3B2B8047DADCB /* Configuration */,
 				108BE83088A2EF0C2296E2EC /* LICENSE */,
+				1604D216F5E1AEAF173B9F61 /* Pods */,
+				F310FA99558F80D4985D12A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */,
+				2033887426BB7A840091BF46 /* ViewController2.swift */,
 				E1635E1723D5BDFD0031A7D8 /* ViewController.swift */,
 				0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */,
 				E1635E2D23D736E70031A7D8 /* Extensions.swift */,
@@ -93,6 +113,14 @@
 			name = Configuration;
 			sourceTree = "<group>";
 		};
+		F310FA99558F80D4985D12A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3AF8D17AB6CCB8DE115896AD /* Pods_VisualizingSceneSemantics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -100,9 +128,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E1635E2623D5BDFE0031A7D8 /* Build configuration list for PBXNativeTarget "VisualizingSceneSemantics" */;
 			buildPhases = (
+				94F700E3E145B4309B66855D /* [CP] Check Pods Manifest.lock */,
 				E1635E0E23D5BDFD0031A7D8 /* Sources */,
 				E1635E0F23D5BDFD0031A7D8 /* Frameworks */,
 				E1635E1023D5BDFD0031A7D8 /* Resources */,
+				D0F3C4DC3832CFBAE2B22AB6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -159,6 +189,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		94F700E3E145B4309B66855D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VisualizingSceneSemantics-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D0F3C4DC3832CFBAE2B22AB6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VisualizingSceneSemantics/Pods-VisualizingSceneSemantics-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VisualizingSceneSemantics/Pods-VisualizingSceneSemantics-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VisualizingSceneSemantics/Pods-VisualizingSceneSemantics-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E1635E0E23D5BDFD0031A7D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -169,6 +241,7 @@
 				E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */,
 				E1635E2E23D736E70031A7D8 /* Extensions.swift in Sources */,
 				0C26373623E065EB0017A846 /* ViewController+CoachingOverlay.swift in Sources */,
+				2033887526BB7A840091BF46 /* ViewController2.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
