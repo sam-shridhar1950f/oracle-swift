@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0C26373623E065EB0017A846 /* ViewController+CoachingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */; };
 		2033887526BB7A840091BF46 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2033887426BB7A840091BF46 /* ViewController2.swift */; };
+		208B0CAC26BE3FDF009C7026 /* MobileNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 208B0CAB26BE3FDF009C7026 /* MobileNet.mlmodel */; };
+		208B0CAE26BE4605009C7026 /* Resnet50.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 208B0CAD26BE4605009C7026 /* Resnet50.mlmodel */; };
 		20C106BB26BE1C6D00168398 /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */; };
 		E136398023EB064300668585 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136397F23EB064300668585 /* RoundedButton.swift */; };
 		E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */; };
@@ -22,6 +24,8 @@
 /* Begin PBXFileReference section */
 		0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+CoachingOverlay.swift"; sourceTree = "<group>"; };
 		2033887426BB7A840091BF46 /* ViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
+		208B0CAB26BE3FDF009C7026 /* MobileNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MobileNet.mlmodel; path = "../../../../Downloads/ClassifyingImagesWithVisionAndCoreML/Vision+ML Example/Model/MobileNet.mlmodel"; sourceTree = "<group>"; };
+		208B0CAD26BE4605009C7026 /* Resnet50.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = Resnet50.mlmodel; path = ../../../../Downloads/Resnet50.mlmodel; sourceTree = "<group>"; };
 		20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2.mlmodel; sourceTree = "<group>"; };
 		28811F3E4EB27EC6196B6F5B /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E136397F23EB064300668585 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -76,6 +80,7 @@
 		E1635E1423D5BDFD0031A7D8 /* VisualizingSceneSemantics */ = {
 			isa = PBXGroup;
 			children = (
+				208B0CAD26BE4605009C7026 /* Resnet50.mlmodel */,
 				20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */,
 				E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */,
 				2033887426BB7A840091BF46 /* ViewController2.swift */,
@@ -84,6 +89,7 @@
 				E1635E2D23D736E70031A7D8 /* Extensions.swift */,
 				E136397F23EB064300668585 /* RoundedButton.swift */,
 				E1635E1B23D5BDFD0031A7D8 /* Main.storyboard */,
+				208B0CAB26BE3FDF009C7026 /* MobileNet.mlmodel */,
 				E1635E1E23D5BDFE0031A7D8 /* Assets.xcassets */,
 				E1635E2023D5BDFE0031A7D8 /* LaunchScreen.storyboard */,
 				E1635E2323D5BDFE0031A7D8 /* Info.plist */,
@@ -170,6 +176,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				208B0CAC26BE3FDF009C7026 /* MobileNet.mlmodel in Sources */,
+				208B0CAE26BE4605009C7026 /* Resnet50.mlmodel in Sources */,
 				20C106BB26BE1C6D00168398 /* MobileNetV2.mlmodel in Sources */,
 				E1635E1823D5BDFD0031A7D8 /* ViewController.swift in Sources */,
 				E136398023EB064300668585 /* RoundedButton.swift in Sources */,

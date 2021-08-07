@@ -177,43 +177,13 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     @objc
     func startDetectionHelper() {
-        objects.removeAll()
-        //var objects = [SectionClassificationObject]()
-        var points = [XYPoint]()
-        points = GeneratePoints(a: 3, b: 3, array: &points)
-        for i in 0...points.count - 1 {
-            let coord: XYPoint = points[i]
-            startDetection(coord: coord, completionHandler: {
-                if objects.count == points.count {
-                    print("WABABGGAB")
-                    var newObj:SectionClassificationObject = objects[0]
-                    let newObjects = objects.sorted {$0.distance < $1.distance}
-                    for i in 0...newObjects.count - 1 {
-                        if newObjects[i].classification != "None" && newObjects[i].classification != ""{
-                            newObj = newObjects[i]
-                            break
-                        }
-                        
-                    }
-                    let classification = newObj.classification
-                    let dist = round(newObj.distance * 10) / 10.0
-                    print(classification)
-                    if classification != "" {
-                        print(classification)
-                        let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
-                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                        let synthesizer = AVSpeechSynthesizer()
-                        synthesizer.speak(utterance)
-                    }
-                }
-                
-                var res = self.snapShotCamera()
+        var res = self.snapShotCamera()
                 var ciImage = res.0
                 
                  var classificationRequest: VNCoreMLRequest? = {
                     do {
                     
-                        let model = try VNCoreMLModel(for: MobileNetV2().model)
+                        let model = try VNCoreMLModel(for: Resnet50().model)
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                         
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
@@ -250,12 +220,43 @@ class ViewController: UIViewController, ARSessionDelegate {
                         print("Failed to perform classification.\n\(error.localizedDescription)")
                     }
                 }
+        objects.removeAll()
+        //var objects = [SectionClassificationObject]()
+        var points = [XYPoint]()
+        points = GeneratePoints(a: 3, b: 3, array: &points)
+        for i in 0...points.count - 1 {
+            let coord: XYPoint = points[i]
+            startDetection(coord: coord, completionHandler: {
+                if objects.count == points.count {
+                    print("WABABGGAB")
+                    var newObj:SectionClassificationObject = objects[0]
+                    let newObjects = objects.sorted {$0.distance < $1.distance}
+                    for i in 0...newObjects.count - 1 {
+                        if newObjects[i].classification != "None" && newObjects[i].classification != ""{
+                            newObj = newObjects[i]
+                            break
+                        }
+                        
+                    }
+                    let classification = newObj.classification
+                    let dist = round(newObj.distance * 10) / 10.0
+                    print(classification)
+                    if classification != "" {
+                        print(classification)
+                        let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
+                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                        let synthesizer = AVSpeechSynthesizer()
+                        synthesizer.speak(utterance)
+                    }
+                }
+                
+                
             })
             // print(points.count)
-           print(objects.count)
+           //print(objects.count)
              
         }
-        
+       
         
         
         
@@ -298,7 +299,7 @@ class ViewController: UIViewController, ARSessionDelegate {
            context = CIContext(options: nil),
            cgImage = context.createCGImage(ciImage, from: ciImage.extent),
            uiImage = UIImage(cgImage: cgImage!, scale: 1, orientation: .right)
-            // UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(imageSaveHandler(image:didFinishSavingWithError:contextInfo:)), nil)
+//            UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(imageSaveHandler(image:didFinishSavingWithError:contextInfo:)), nil)
         return (ciImage, uiImage)
         }
         
@@ -640,3 +641,4 @@ class ViewController: UIViewController, ARSessionDelegate {
 //class SectionClassificationObject {
 //
 //}
+
