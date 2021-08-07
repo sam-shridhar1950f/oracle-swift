@@ -154,8 +154,6 @@ class ViewController: UIViewController, ARSessionDelegate {
 //                sleep(2000)s
                 
                 
-            
-            
         })
         
         
@@ -207,6 +205,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                         synthesizer.speak(utterance)
                     }
                 }
+                
+                self.snapShotCamera()
             })
             // print(points.count)
            print(objects.count)
@@ -220,11 +220,28 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     
     
-    func hierarchy() {
-        // return distance and classification from startDetection --
-        // if floor --> no utterance. Anything else --> closest object gets priority and is called out
-        // insert into startDetectionHelper()
-    }
+    
+    
+    func snapShotCamera(){
+       
+            guard let pixelBuffer = arView.session.currentFrame?.capturedImage else {
+                return
+            }
+            print("1738 IM LIKE HEY WASSUP HELLO")
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer),
+            context = CIContext(options: nil),
+            cgImage = context.createCGImage(ciImage, from: ciImage.extent),
+            uiImage = UIImage(cgImage: cgImage!, scale: 1, orientation: .right)
+            UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(imageSaveHandler(image:didFinishSavingWithError:contextInfo:)), nil)
+        }
+        
+        @objc func imageSaveHandler(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
+            if error != nil {
+                print("Error saving picture")
+            } else {
+                print("Image saved successfully")
+            }
+        }
     
     
     func proximityToCenter() {
