@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C26373623E065EB0017A846 /* ViewController+CoachingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */; };
 		2033887526BB7A840091BF46 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2033887426BB7A840091BF46 /* ViewController2.swift */; };
+		20C106BB26BE1C6D00168398 /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */; };
 		E136398023EB064300668585 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136397F23EB064300668585 /* RoundedButton.swift */; };
 		E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */; };
 		E1635E1823D5BDFD0031A7D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1723D5BDFD0031A7D8 /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewController+CoachingOverlay.swift"; sourceTree = "<group>"; };
 		2033887426BB7A840091BF46 /* ViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
+		20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2.mlmodel; sourceTree = "<group>"; };
 		28811F3E4EB27EC6196B6F5B /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E136397F23EB064300668585 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		E1635E1223D5BDFD0031A7D8 /* Scene Semantics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Scene Semantics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +76,7 @@
 		E1635E1423D5BDFD0031A7D8 /* VisualizingSceneSemantics */ = {
 			isa = PBXGroup;
 			children = (
+				20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */,
 				E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */,
 				2033887426BB7A840091BF46 /* ViewController2.swift */,
 				E1635E1723D5BDFD0031A7D8 /* ViewController.swift */,
@@ -167,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20C106BB26BE1C6D00168398 /* MobileNetV2.mlmodel in Sources */,
 				E1635E1823D5BDFD0031A7D8 /* ViewController.swift in Sources */,
 				E136398023EB064300668585 /* RoundedButton.swift in Sources */,
 				E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */,

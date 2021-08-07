@@ -8,7 +8,7 @@ import RealityKit
 import ARKit
 import AVFoundation
 import UIKit
-
+import CoreML
 
 var setDist:Float = 0.0
 //var points = [XYPoint]()
@@ -82,6 +82,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     
     @IBOutlet var arView: ARView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var hideMeshButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var planeDetectionButton: UIButton!
@@ -206,7 +207,49 @@ class ViewController: UIViewController, ARSessionDelegate {
                     }
                 }
                 
-                self.snapShotCamera()
+                var res = self.snapShotCamera()
+                var ciImage = res.0
+                
+                 var classificationRequest: VNCoreMLRequest? = {
+                    do {
+                    
+                        let model = try VNCoreMLModel(for: MobileNetV2().model)
+                    let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
+                        
+                        self?.processClassifications(for: request, error: error, completionHandler: {classification in
+                            print(classification + " CoreML")
+                        })
+//                        var classification: String = self?.processClassifications(for: request, error: error)
+//                        print(classification + "CoreML")
+                    })
+                    request.imageCropAndScaleOption = .centerCrop
+                    return request
+                    } catch {
+                      print("eror :(")
+                        return nil
+                    }
+                }()
+                
+                var uiImage = res.1
+                
+             //   uiImage = uiImage!
+               // self.imageView.image = uiImage
+        //        let orientation = CGImagePropertyOrientation(rawValue: uiImage.orientation)
+           // let orientation = uiImage?.imageOrientation
+                DispatchQueue.global(qos: .userInitiated).async {
+                  //  print("DIBA WABA SEX BAB")
+                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation(rawValue: 3)!)
+                    do {
+                        try handler.perform([classificationRequest!])
+                    } catch {
+                        /*
+                         This handler catches general image processing errors. The `classificationRequest`'s
+                         completion handler `processClassifications(_:error:)` catches errors specific
+                         to processing that request.
+                         */
+                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                    }
+                }
             })
             // print(points.count)
            print(objects.count)
@@ -220,19 +263,43 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     
     
-    
-    
-    func snapShotCamera(){
-       
-            guard let pixelBuffer = arView.session.currentFrame?.capturedImage else {
+    func processClassifications(for request: VNRequest, error: Error?, completionHandler: @escaping (String) -> Void) {
+        DispatchQueue.main.async {
+            guard let results = request.results else {
+//                self.classificationLabel.text = "Unable to classify image.\n\(error!.localizedDescription)"
                 return
             }
-            print("1738 IM LIKE HEY WASSUP HELLO")
+            // The `results` will always be `VNClassificationObservation`s, as specified by the Core ML model in this project.
+            let classifications = results as! [VNClassificationObservation]
+        
+            if classifications.isEmpty {
+               // self.classificationLabel.text = "Nothing recognized."
+            } else {
+                // Display top classifications ranked by confidence in the UI.
+                let topClassifications = classifications.prefix(2)
+                let descriptions = topClassifications.map { classification in
+                    // Formats the classification for display; e.g. "(0.37) cliff, drop, drop-off".
+                   completionHandler(String(format: "  (%.2f) %@", classification.confidence, classification.identifier))
+                }
+//                self.classificationLabel.text = "Classification:\n" + descriptions.joined(separator: "\n")
+            }
+        }
+    }
+    
+    
+    
+    func snapShotCamera() -> (CIImage, UIImage) {
+       
+            guard let pixelBuffer = arView.session.currentFrame?.capturedImage else {
+                fatalError("ded")
+            }
+            //print("1738 IM LIKE HEY WASSUP HELLO")
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer),
-            context = CIContext(options: nil),
-            cgImage = context.createCGImage(ciImage, from: ciImage.extent),
-            uiImage = UIImage(cgImage: cgImage!, scale: 1, orientation: .right)
-            UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(imageSaveHandler(image:didFinishSavingWithError:contextInfo:)), nil)
+           context = CIContext(options: nil),
+           cgImage = context.createCGImage(ciImage, from: ciImage.extent),
+           uiImage = UIImage(cgImage: cgImage!, scale: 1, orientation: .right)
+            // UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(imageSaveHandler(image:didFinishSavingWithError:contextInfo:)), nil)
+        return (ciImage, uiImage)
         }
         
         @objc func imageSaveHandler(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
