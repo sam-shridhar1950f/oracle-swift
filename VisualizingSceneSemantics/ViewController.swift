@@ -9,6 +9,7 @@ import ARKit
 import AVFoundation
 import UIKit
 import CoreML
+import Vision
 
 var setDist:Float = 0.0
 //var points = [XYPoint]()
@@ -77,8 +78,223 @@ func GeneratePoints(a: Int, b: Int, array: inout [XYPoint]) -> [XYPoint] { //a i
 }
 
 @available(iOS 14.0, *)
-class ViewController: UIViewController, ARSessionDelegate {
+class ViewController: UIViewController, ARSessionDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
+    @IBOutlet weak private var previewView: UIView?
+    var rootLayer: CALayer? = nil
+    var bufferSize: CGSize = .zero
+    private var requests = [VNRequest]()
+    private var previewLayer: AVCaptureVideoPreviewLayer! = nil
+    private let session = AVCaptureSession()
+    private var detectionOverlay: CALayer! = nil
+    var deviceInput: AVCaptureDeviceInput!
+    private let videoDataOutput = AVCaptureVideoDataOutput()
+    private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutput", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
     
+    let videoDevice = AVCaptureDevice.DiscoverySession(deviceTypes:[.builtInWideAngleCamera], mediaType: .video, position: .back).devices.first
+    func wab() {
+        do {
+        self.deviceInput = try AVCaptureDeviceInput(device: videoDevice!)
+        } catch { // AHHHHHHHHHHHH
+            print("Could not create video device input: \(error)")
+            return
+        }
+
+        session.beginConfiguration()
+        session.sessionPreset = .vga640x480 // Model image size is smaller.
+        
+        guard session.canAddInput(deviceInput) else {
+            print("Could not add video device input to the session")
+            session.commitConfiguration()
+            return
+        }
+        session.addInput(deviceInput)
+        
+        if session.canAddOutput(videoDataOutput) {
+            session.addOutput(videoDataOutput)
+            // Add a video data output
+            videoDataOutput.alwaysDiscardsLateVideoFrames = true
+            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+            videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+        } else {
+            print("Could not add video data output to the session")
+            session.commitConfiguration()
+            return
+        }
+        
+        let captureConnection = videoDataOutput.connection(with: .video)
+        // Always process the frames
+        captureConnection?.isEnabled = true
+        do {
+            try  videoDevice!.lockForConfiguration()
+            let dimensions = CMVideoFormatDescriptionGetDimensions((videoDevice?.activeFormat.formatDescription)!)
+            bufferSize.width = CGFloat(dimensions.width)
+            bufferSize.height = CGFloat(dimensions.height)
+            videoDevice!.unlockForConfiguration()
+        } catch {
+            print(error)
+        }
+        
+        session.commitConfiguration()
+        
+        previewLayer = AVCaptureVideoPreviewLayer(session: session)
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        rootLayer = previewView?.layer
+        if rootLayer?.bounds != nil{
+            previewLayer.frame = rootLayer!.bounds
+        }
+        
+        rootLayer?.addSublayer(previewLayer)
+        
+        let curDeviceOrientation = UIDevice.current.orientation
+        let exifOrientation: CGImagePropertyOrientation
+
+        switch curDeviceOrientation {
+        case UIDeviceOrientation.portraitUpsideDown:  // Device oriented vertically, home button on the top
+            exifOrientation = .left
+        case UIDeviceOrientation.landscapeLeft:       // Device oriented horizontally, home button on the right
+            exifOrientation = .upMirrored
+        case UIDeviceOrientation.landscapeRight:      // Device oriented horizontally, home button on the left
+            exifOrientation = .down
+        case UIDeviceOrientation.portrait:            // Device oriented vertically, home button on the bottom
+            exifOrientation = .up
+        default:
+            exifOrientation = .up
+        }
+        
+        
+    }
+    
+    @discardableResult
+        func setupVision() -> NSError? {
+            // Setup Vision parts
+            let error: NSError! = nil
+            
+            guard let modelURL = Bundle.main.url(forResource: "ObjectDetector", withExtension: "mlmodelc") else {
+                return NSError(domain: "VisionObjectRecognitionViewController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Model file is missing"])
+            }
+            do {
+                let visionModel = try VNCoreMLModel(for: MLModel(contentsOf: modelURL))
+                let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
+                    DispatchQueue.main.async(execute: {
+                        // perform all the UI updates on the main queue
+                        if let results = request.results {
+                            self.drawVisionRequestResults(results)
+                        }
+                    })
+                })
+                self.requests = [objectRecognition]
+            } catch let error as NSError {
+                print("Model loading went wrong: \(error)")
+            }
+            
+            return error
+        }
+    
+    func drawVisionRequestResults(_ results: [Any]) {
+            CATransaction.begin()
+            CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+            detectionOverlay.sublayers = nil // remove all the old recognized objects
+            for observation in results where observation is VNRecognizedObjectObservation {
+                guard let objectObservation = observation as? VNRecognizedObjectObservation else {
+                    continue
+                }
+                // Select only the label with the highest confidence.
+                let topLabelObservation = objectObservation.labels[0]
+                print(topLabelObservation)
+                print("Vision")
+                let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
+                
+                let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds)
+                
+                let textLayer = self.createTextSubLayerInBounds(objectBounds,
+                                                                identifier: topLabelObservation.identifier,
+                                                                confidence: topLabelObservation.confidence)
+                shapeLayer.addSublayer(textLayer)
+                detectionOverlay.addSublayer(shapeLayer)
+            }
+            self.updateLayerGeometry()
+            CATransaction.commit()
+        }
+        
+    func updateLayerGeometry() {
+            let bounds = rootLayer!.bounds
+            var scale: CGFloat
+            
+            let xScale: CGFloat = bounds.size.width / bufferSize.height
+            let yScale: CGFloat = bounds.size.height / bufferSize.width
+            
+            scale = fmax(xScale, yScale)
+            if scale.isInfinite {
+                scale = 1.0
+            }
+            CATransaction.begin()
+            CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+            
+            // rotate the layer into screen orientation and scale and mirror
+            detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
+            // center the layer
+            detectionOverlay.position = CGPoint(x: bounds.midX, y: bounds.midY)
+            
+            CATransaction.commit()
+            
+        }
+    
+    func createRoundedRectLayerWithBounds(_ bounds: CGRect) -> CALayer {
+          let shapeLayer = CALayer()
+          shapeLayer.bounds = bounds
+          shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+          shapeLayer.name = "Found Object"
+          shapeLayer.backgroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [1.0, 1.0, 0.2, 0.4])
+          shapeLayer.cornerRadius = 7
+          return shapeLayer
+      }
+    
+    func createTextSubLayerInBounds(_ bounds: CGRect, identifier: String, confidence: VNConfidence) -> CATextLayer {
+           let textLayer = CATextLayer()
+           textLayer.name = "Object Label"
+           let formattedString = NSMutableAttributedString(string: String(format: "\(identifier)\nConfidence:  %.2f", confidence))
+           let largeFont = UIFont(name: "Helvetica", size: 24.0)!
+           formattedString.addAttributes([NSAttributedString.Key.font: largeFont], range: NSRange(location: 0, length: identifier.count))
+           textLayer.string = formattedString
+           textLayer.bounds = CGRect(x: 0, y: 0, width: bounds.size.height - 10, height: bounds.size.width - 10)
+           textLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+           textLayer.shadowOpacity = 0.7
+           textLayer.shadowOffset = CGSize(width: 2, height: 2)
+           textLayer.foregroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [0.0, 0.0, 0.0, 1.0])
+           textLayer.contentsScale = 2.0 // retina rendering
+           // rotate the layer into screen orientation and scale and mirror
+           textLayer.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: 1.0, y: -1.0))
+           return textLayer
+       }
+    
+    func mlobj() {
+        guard let modelURL = Bundle.main.url(forResource: "ObjectDetector", withExtension: "mlmodelc") else {
+            print("vision failed")
+            return
+        }
+        do {
+                    let visionModel = try VNCoreMLModel(for: MLModel(contentsOf: modelURL))
+                    let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
+                        DispatchQueue.main.async(execute: {
+                            // perform all the UI updates on the main queue
+                            if let results = request.results {
+                                self.drawVisionRequestResults(results)
+                                
+                                
+                            }
+                            
+                            
+                        })
+                    })
+                    self.requests = [objectRecognition]
+                } catch let error as NSError {
+                    print("Model loading went wrong: \(error)")
+                }
+        
+        
+    }
+
+
     
     
     @IBOutlet var arView: ARView!
@@ -148,7 +364,7 @@ class ViewController: UIViewController, ARSessionDelegate {
        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
             print("DaBaby \(Thread.current)")
-          
+            self.wab()
             let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.startDetectionHelper), userInfo: nil, repeats: true)
             
                 // self.startDetection()
@@ -177,49 +393,6 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     @objc
     func startDetectionHelper() {
-        var res = self.snapShotCamera()
-                var ciImage = res.0
-                
-                 var classificationRequest: VNCoreMLRequest? = {
-                    do {
-                    
-                        let model = try VNCoreMLModel(for: Resnet50().model)
-                    let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
-                        
-                        self?.processClassifications(for: request, error: error, completionHandler: {classification in
-                            print(classification + " CoreML")
-                        })
-//                        var classification: String = self?.processClassifications(for: request, error: error)
-//                        print(classification + "CoreML")
-                    })
-                    request.imageCropAndScaleOption = .centerCrop
-                    return request
-                    } catch {
-                      print("eror :(")
-                        return nil
-                    }
-                }()
-                
-                var uiImage = res.1
-                
-             //   uiImage = uiImage!
-               // self.imageView.image = uiImage
-        //        let orientation = CGImagePropertyOrientation(rawValue: uiImage.orientation)
-           // let orientation = uiImage?.imageOrientation
-                DispatchQueue.global(qos: .userInitiated).async {
-                  //  print("DIBA WABA SEX BAB")
-                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation(rawValue: 3)!)
-                    do {
-                        try handler.perform([classificationRequest!])
-                    } catch {
-                        /*
-                         This handler catches general image processing errors. The `classificationRequest`'s
-                         completion handler `processClassifications(_:error:)` catches errors specific
-                         to processing that request.
-                         */
-                        print("Failed to perform classification.\n\(error.localizedDescription)")
-                    }
-                }
         objects.removeAll()
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
