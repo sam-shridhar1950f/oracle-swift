@@ -3,12 +3,12 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Main view controller for the AR experience.
 */
-
 import RealityKit
 import ARKit
 import AVFoundation
 import UIKit
 import CoreML
+//import RealmSwift
 
 var setDist:Float = 0.0
 //var points = [XYPoint]()
@@ -183,7 +183,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                  var classificationRequest: VNCoreMLRequest? = {
                     do {
                     
-                        let model = try VNCoreMLModel(for: Resnet50().model)
+                        let model = try VNCoreMLModel(for: ahh().model)
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                         
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
@@ -227,10 +227,19 @@ class ViewController: UIViewController, ARSessionDelegate {
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
             startDetection(coord: coord, completionHandler: {
+                if objects.count != points.count && objects.count < 9{
+                    print(String(objects.count) + "yessir")
+                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None"), count: (9-objects.count))
+                }
+                
                 if objects.count == points.count {
+                    print(String(objects.count) + " " + String(points.count))
                     print("WABABGGAB")
                     var newObj:SectionClassificationObject = objects[0]
                     let newObjects = objects.sorted {$0.distance < $1.distance}
+                    
+                   // print("RAAR")
+                   // print(newObjects.count)
                     for i in 0...newObjects.count - 1 {
                         if newObjects[i].classification != "None" && newObjects[i].classification != ""{
                             newObj = newObjects[i]
@@ -240,9 +249,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                     }
                     let classification = newObj.classification
                     let dist = round(newObj.distance * 10) / 10.0
-                    print(classification)
-                    if classification != "" {
-                        print(classification)
+                    print(classification + " prior")
+                    if classification != "None" {
+                        print(classification + " after")
                         let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
                         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                         let synthesizer = AVSpeechSynthesizer()
@@ -373,8 +382,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                         // construct classification object:
                         let obj = SectionClassificationObject(direction: "wip", coord: coord, distance: distanceAtXYPoint, classification: _classification)
                         objects.append(obj)
-                        print(objects.count)
-                        print(obj.classification)
+                       // print(objects.count)
+                      //  print(obj.classification)
+                        
                         
                         completionHandler()
                     }
@@ -641,4 +651,5 @@ class ViewController: UIViewController, ARSessionDelegate {
 //class SectionClassificationObject {
 //
 //}
+
 
