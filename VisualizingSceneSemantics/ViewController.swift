@@ -132,7 +132,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         DispatchQueue.global(qos: .background).async {
             //print("WIBABBABABB")
-            print("DaBby \(Thread.current)")
+            //print("DaBby \(Thread.current)")
             configuration.planeDetection = [.horizontal, .vertical]
 //            print(configuration.planeDetection.)
             self.arView.session.run(configuration)
@@ -185,12 +185,19 @@ class ViewController: UIViewController, ARSessionDelegate {
                     do {
                     
                         let model = try VNCoreMLModel(for: ahh2().model)
+                        var classificationList: [String] = []
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
-                        
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
+                            //currentMLClassification = classification
+                            classificationList.append(classification)
                             print(classification + " CoreML")
-                            currentMLClassification = classification
                         })
+                        if (classificationList.count > 0) {
+                            currentMLClassification = classificationList[0]
+                        }
+                        else {
+                            currentMLClassification = ""
+                        }
 //                        var classification: String = self?.processClassifications(for: request, error: error)
 //                        print(classification + "CoreML")
                     })
@@ -230,7 +237,7 @@ class ViewController: UIViewController, ARSessionDelegate {
             let coord: XYPoint = points[i]
             startDetection(coord: coord, completionHandler: {
                 if objects.count != points.count && objects.count < 9{
-                    print(String(objects.count) + "yessir")
+                    //print(String(objects.count) + "yessir")
                     objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None"), count: (9-objects.count))
                 }
                 
@@ -260,6 +267,26 @@ class ViewController: UIViewController, ARSessionDelegate {
                         synthesizer.speak(utterance)
                     } else {
                         //print(classification)
+                        //attempt at classification
+//                        var temp = currentMLClassification
+//                        var confidence = ""
+//                        for char in temp {
+//                            confidence.append(char)
+//                            if char == ")" {
+//                                break
+//                            }
+//                        }
+//
+//                        confidence = confidence.replacingOccurrences(of: "(", with: "")
+//                        confidence = confidence.replacingOccurrences(of: ")", with: "")
+//                        let confidenceFloat = Double(confidence)
+//
+//                        print("baby daby: " + confidenceFloat.description)
+//
+//                        if (confidenceFloat! < 0.95) {
+//                            return
+//                        }
+                        
                         let utterance = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
                         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                         let synthesizer = AVSpeechSynthesizer()
@@ -400,7 +427,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 }
                 
             } else {
-                print("WIBBBAA")
+                //print("WIBBBAA")
             }
             
         }
