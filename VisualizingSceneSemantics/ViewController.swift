@@ -13,6 +13,7 @@ import CoreML
 var setDist:Float = 0.0
 //var points = [XYPoint]()
 var objects = [SectionClassificationObject]()
+var currentMLClassification = ""
 
 
 struct XYPoint {
@@ -130,7 +131,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         configuration.environmentTexturing = .automatic
         
         DispatchQueue.global(qos: .background).async {
-            print("WIBABBABABB")
+            //print("WIBABBABABB")
             print("DaBby \(Thread.current)")
             configuration.planeDetection = [.horizontal, .vertical]
 //            print(configuration.planeDetection.)
@@ -147,7 +148,7 @@ class ViewController: UIViewController, ARSessionDelegate {
             //sleep(5000)
        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
-            print("DaBaby \(Thread.current)")
+            //print("DaBaby \(Thread.current)")
           
             let timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.startDetectionHelper), userInfo: nil, repeats: true)
             
@@ -188,6 +189,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                         
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
                             print(classification + " CoreML")
+                            currentMLClassification = classification
                         })
 //                        var classification: String = self?.processClassifications(for: request, error: error)
 //                        print(classification + "CoreML")
@@ -234,7 +236,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 
                 if objects.count == points.count {
                     print(String(objects.count) + " " + String(points.count))
-                    print("WABABGGAB")
+                    //print("WABABGGAB")
                     var newObj:SectionClassificationObject = objects[0]
                     let newObjects = objects.sorted {$0.distance < $1.distance}
                     
@@ -247,15 +249,22 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                     }
-                    let classification = newObj.classification
+                    let classification_apple = newObj.classification
                     let dist = round(newObj.distance * 10) / 10.0
-                    print(classification + " prior")
-                    if classification != "None" {
-                        print(classification + " after")
-                        let utterance = AVSpeechUtterance(string: classification + "at" + String(dist) + "meters")
+                    print(classification_apple + " prior")
+                    if classification_apple != "None" {
+                        print(classification_apple + " after")
+                        let utterance = AVSpeechUtterance(string: classification_apple + "at" + String(dist) + "meters")
                         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                         let synthesizer = AVSpeechSynthesizer()
                         synthesizer.speak(utterance)
+                    } else {
+                        //print(classification)
+                        let utterance = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
+                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                        let synthesizer = AVSpeechSynthesizer()
+                        synthesizer.speak(utterance)
+
                     }
                 }
                 
