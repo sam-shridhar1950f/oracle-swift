@@ -285,7 +285,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                         
                         let confidenceFloat = Double(confidence)
 
-                        if (confidenceFloat! > 0.85) {
+                        if (confidenceFloat! >= 0.85) {
                             return
                         }
                         
