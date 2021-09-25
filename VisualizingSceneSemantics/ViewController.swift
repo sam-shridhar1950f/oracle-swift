@@ -179,6 +179,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     @objc
     func startDetectionHelper() {
+        var count = 1
         var res = self.snapShotCamera()
                 var ciImage = res.0
                  var classificationRequest: VNCoreMLRequest? = {
@@ -188,10 +189,15 @@ class ViewController: UIViewController, ARSessionDelegate {
                         var classificationList: [String] = []
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
+                            classificationList.append(classification)
                             print(classification + " CoreML")
-                            currentMLClassification = classification
+                            if (count == 1) {
+                                currentMLClassification = classification
+                                count+=1
+                            }
                             
                         })
+                        count = 1
 
 //                        var classification: String = self?.processClassifications(for: request, error: error)
 //                        print(classification + "CoreML")
@@ -252,14 +258,51 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                     }
-                    let classification_apple = newObj.classification
+                    var classification_apple = newObj.classification
                     let dist = round(newObj.distance * 10) / 10.0
                     print(classification_apple + " prior")
                     
                     
+                    // certain objects which override the lidar classification
+                    let overrideClassifications = ["people"]
+                    for c in overrideClassifications {
+                        print("aaa")
+                        print(currentMLClassification)
+                        print("end aaaa")
+                        var temp = currentMLClassification
+                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
+                        print("start")
+                        print(temp)
+                        print("end")
+                        if (temp.count < 1) {
+                            return
+                        }
+                        let components = temp.components(separatedBy: " ")
+                        print(components)
+                        var confidence = components[0]
+                        var classification = components[1]
+                        print(classification)
+                        if (classification == c) {
+                            print("daby")
+                            confidence = confidence.replacingOccurrences(of: "(", with: "")
+                            confidence = confidence.replacingOccurrences(of: ")", with: "")
+                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if (confidence.count > 0) {
+                                let confidenceFloat = Double(confidence)
+                                print(confidenceFloat!)
+                                if (confidenceFloat! >= 0.85) {
+                                    classification_apple = classification
+                                    print("change")
+                                }
+                                print(classification_apple)
+                            }
+                        }
+                    }
+                    
                     if classification_apple != "None" {
                         print(classification_apple + " after")
-                        let utterance = AVSpeechUtterance(string: classification_apple + "at" + String(dist) + "meters")
+                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
+                        print(classification_apple + "at" + String(dist) + "meters")
                         utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                         let synthesizer = AVSpeechSynthesizer()
                         synthesizer.speak(utterance)
@@ -284,8 +327,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                         let confidenceFloat = Double(confidence)
-
-                        if (confidenceFloat! >= 0.85) {
+                        
+                        if (confidenceFloat! < 0.85) {
                             return
                         }
                         
@@ -293,7 +336,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                         utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                         let synthesizer2 = AVSpeechSynthesizer()
                         synthesizer2.speak(utterance2)
-
+                        return
                     }
                 }
                 
