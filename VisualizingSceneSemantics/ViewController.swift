@@ -180,9 +180,9 @@ class ViewController: UIViewController, ARSessionDelegate {
     @objc
     func startDetectionHelper() {
         var count = 1
-        var res = self.snapShotCamera()
-                var ciImage = res.0
-                 var classificationRequest: VNCoreMLRequest? = {
+        let res = self.snapShotCamera()
+                let ciImage = res.0
+                 let classificationRequest: VNCoreMLRequest? = {
                     do {
                     
                         let model = try VNCoreMLModel(for: mod1().model)
@@ -280,7 +280,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                         let components = temp.components(separatedBy: " ")
                         print(components)
                         var confidence = components[0]
-                        var classification = components[1]
+                        let classification = components[1]
                         print(classification)
                         if (classification == c) {
                             print("daby")
@@ -299,25 +299,33 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                     }
                     
-                    if classification_apple != "None" {
-                        print(classification_apple + " after")
-                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
-                        print(classification_apple + "at" + String(dist) + "meters")
-                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                        let synthesizer = AVSpeechSynthesizer()
-                        synthesizer.speak(utterance)
-                    } else {
+//                    if classification_apple != "None" {
+//                        print(classification_apple + " after")
+//                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
+//                        print(classification_apple + "at" + String(dist) + "meters")
+//                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+//                        let synthesizer = AVSpeechSynthesizer()
+//                        synthesizer.speak(utterance)
+//                    } else {
                         //print(classification)
                         //attempt at classification
-                        var temp = currentMLClassification
-                        var confidence = ""
-                        for char in temp {
-                            confidence.append(char)
+//                        var temp = currentMLClassification
+//                        var confidence = ""
+//                        for char in temp {
+//                            confidence.append(char)
+//                            if char == ")" {
+//                                break
+//                            }
+//                        }
+                    
+                    let temp = currentMLClassification
+                    var confidence = ""
+                    for char in temp {
+                       confidence.append(char)
                             if char == ")" {
-                                break
-                            }
+                              break
                         }
-
+                    }
                         confidence = confidence.replacingOccurrences(of: "(", with: "")
                         confidence = confidence.replacingOccurrences(of: ")", with: "")
                         confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -327,19 +335,36 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                         let confidenceFloat = Double(confidence)
-                        
                         if (confidenceFloat! < 0.85) {
                             return
                         }
                         
-                        let utterance2 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
-                        utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-                        let synthesizer2 = AVSpeechSynthesizer()
-                        synthesizer2.speak(utterance2)
-                        return
+                        let precdence: [String] = ["people"] // list of important objects
+                        
+                        if precdence.contains(currentMLClassification.lowercased()) {
+                            let utterance2 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
+                            utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                            let synthesizer2 = AVSpeechSynthesizer()
+                            synthesizer2.speak(utterance2)
+                            return
+                        } else {
+                            if classification_apple != "None"{
+                                print(classification_apple + " after")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
+                                print(classification_apple + "at" + String(dist) + "meters")
+                                utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                                let synthesizer = AVSpeechSynthesizer()
+                                synthesizer.speak(utterance)
+                                return
+                            } else {
+                                let utterance3 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
+                                utterance3.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                                let synthesizer3 = AVSpeechSynthesizer()
+                                synthesizer3.speak(utterance3)
+                                return
+                            }
+                        }
                     }
-                }
-                
                 
             })
             // print(points.count)
@@ -478,59 +503,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
 
     
-    /// Places virtual-text of the classification at the touch-location's real-world intersection with a mesh.
-    /// Note - because classification of the tapped-mesh is retrieved asynchronously, we visualize the intersection
-    /// point immediately to give instant visual feedback of the tap.
-//    @objc
-//    func handleTap(_ sender: UITapGestureRecognizer) {
-//        // 1. Perform a ray cast against the mesh.
-//        // Note: Ray-cast option ".estimatedPlane" with alignment ".any" also takes the mesh into account.
-//        let tapLocation = sender.location(in: arView)
-//        print("tap location: ")
-//        print(tapLocation)
-//        if let result = arView.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .any).first {
-//            // ...
-//            // 2. Visualize the intersection point of the ray with the real-world surface.
-//            let resultAnchor = AnchorEntity(world: result.worldTransform)
-//            resultAnchor.addChild(sphere(radius: 0.01, color: .lightGray))
-//            arView.scene.addAnchor(resultAnchor, removeAfter: 3)
-//
-//            // 3. Try to get a classification near the tap location.
-//            //    Classifications are available per face (in the geometric sense, not human faces).
-//            nearbyFaceWithClassification(to: result.worldTransform.position) { (centerOfFace, classification) in
-//                // ...
-//                DispatchQueue.main.async {
-//                    // 4. Compute a position for the text which is near the result location, but offset 10 cm
-//                    // towards the camera (along the ray) to minimize unintentional occlusions of the text by the mesh.
-//                    let rayDirection = normalize(result.worldTransform.position - self.arView.cameraTransform.translation)
-//                    let textPositionInWorldCoordinates = result.worldTransform.position - (rayDirection * 0.1)
-//
-//                    // 5. Create a 3D text to visualize the classification result.
-//                    let textEntity = self.model(for: classification)
-//
-//                    // 6. Scale the text depending on the distance, such that it always appears with
-//                    //    the same size on screen.
-//                    let raycastDistance = distance(result.worldTransform.position, self.arView.cameraTransform.translation)
-//                    textEntity.scale = .one * raycastDistance
-//
-//                    // 7. Place the text, facing the camera.
-//                    var resultWithCameraOrientation = self.arView.cameraTransform
-//                    resultWithCameraOrientation.translation = textPositionInWorldCoordinates
-//                    let textAnchor = AnchorEntity(world: resultWithCameraOrientation.matrix)
-//                    textAnchor.addChild(textEntity)
-//                    self.arView.scene.addAnchor(textAnchor, removeAfter: 3)
-//
-//                    // 8. Visualize the center of the face (if any was found) for three seconds.
-//                    //    It is possible that this is nil, e.g. if there was no face close enough to the tap location.
-//                    if let centerOfFace = centerOfFace {
-//                        let faceAnchor = AnchorEntity(world: centerOfFace)
-//                        faceAnchor.addChild(self.sphere(radius: 0.01, color: classification.color))
-//                        self.arView.scene.addAnchor(faceAnchor, removeAfter: 3)
-//                    }
-//                }
-//            }
-//        }
-//    }
+
     
     @IBAction func resetButtonPressed(_ sender: Any) {
         if let configuration = arView.session.configuration {
@@ -654,49 +627,12 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         if let model = modelsForClassification[classification] {
             model.transform = .identity
-//            if classification.description != "None" {
-//            let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
-//
-//            utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-//                //print(setDist)
-//                //print(depthData)
-//                print(distanceAtXYPoint)
-//                let synthesizer = AVSpeechSynthesizer()
-//                synthesizer.speak(utterance)
-//            }
 
-            
-            // synthesizer.continueSpeaking() // Resume a paused speech
-//            return model.clone(recursive: true)
             
             return (Double(distanceAtXYPoint), classification.description)
         }
         
-        // Generate 3D text for the classification
-//        let lineHeight: CGFloat = 0.05
-//        let font = MeshResource.Font.systemFont(ofSize: lineHeight)
-//        let textMesh = MeshResource.generateText(classification.description, extrusionDepth: Float(lineHeight * 0.1), font: font)
-//        let textMaterial = SimpleMaterial(color: classification.color, isMetallic: true)
-//        let model = ModelEntity(mesh: textMesh, materials: [textMaterial])
-//        // Move text geometry to the left so that its local origin is in the center
-//        model.position.x -= model.visualBounds(relativeTo: nil).extents.x / 2
-//        // Add model to cache
-//        modelsForClassification[classification] = model
         
-//        if classification.description != "None" {
-//        let utterance = AVSpeechUtterance(string: classification.description + "at" + String(distanceAtXYPoint) + "meters")
-//
-//        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-//
-//       // print(depthData)
-//       // print(setDist)
-//        print(distanceAtXYPoint)
-//        let synthesizer = AVSpeechSynthesizer()
-//        synthesizer.speak(utterance)
-//        // synthesizer.continueSpeaking() // Resume a paused speech
-//        }
-        
-//        return model
         return (Double(distanceAtXYPoint), classification.description)
     }
     
@@ -715,22 +651,5 @@ class ViewController: UIViewController, ARSessionDelegate {
    }
 }
 
-//class ViewController2: UIViewController, ARSessionDelegate{
-//    var session: ARSession!
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        view.backgroundColor = .blue
-//    }
-//}
-
-//class XYPoint {
-//
-//}
-//
-//class SectionClassificationObject {
-//
-//}
 
 
