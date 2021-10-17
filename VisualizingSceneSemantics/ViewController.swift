@@ -185,7 +185,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                  var classificationRequest: VNCoreMLRequest? = {
                     do {
                     
-                        let model = try VNCoreMLModel(for: ahh2().model)
+                        let model = try VNCoreMLModel(for: mod1().model)
                         var classificationList: [String] = []
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in

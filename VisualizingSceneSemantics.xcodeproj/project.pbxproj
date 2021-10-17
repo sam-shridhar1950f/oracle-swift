@@ -11,6 +11,7 @@
 		2033887526BB7A840091BF46 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2033887426BB7A840091BF46 /* ViewController2.swift */; };
 		20A114B826E564FC00023BBC /* ahh.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20A114B726E564FC00023BBC /* ahh.mlmodel */; };
 		20A114BA26E56B1A00023BBC /* ahh2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20A114B926E56B1900023BBC /* ahh2.mlmodel */; };
+		20A114BC270F7D8A00023BBC /* mod1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20A114BB270F7D8A00023BBC /* mod1.mlmodel */; };
 		20C106BB26BE1C6D00168398 /* MobileNetV2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */; };
 		E136398023EB064300668585 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E136397F23EB064300668585 /* RoundedButton.swift */; };
 		E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1635E1523D5BDFD0031A7D8 /* AppDelegate.swift */; };
@@ -26,6 +27,7 @@
 		2033887426BB7A840091BF46 /* ViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
 		20A114B726E564FC00023BBC /* ahh.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ahh.mlmodel; sourceTree = "<group>"; };
 		20A114B926E56B1900023BBC /* ahh2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = ahh2.mlmodel; path = ../../ahh2.mlmodel; sourceTree = "<group>"; };
+		20A114BB270F7D8A00023BBC /* mod1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = mod1.mlmodel; sourceTree = SOURCE_ROOT; };
 		20C106BA26BE1C6D00168398 /* MobileNetV2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MobileNetV2.mlmodel; sourceTree = "<group>"; };
 		28811F3E4EB27EC6196B6F5B /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E136397F23EB064300668585 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				E1635E1723D5BDFD0031A7D8 /* ViewController.swift */,
 				20A114B926E56B1900023BBC /* ahh2.mlmodel */,
 				20A114B726E564FC00023BBC /* ahh.mlmodel */,
+				20A114BB270F7D8A00023BBC /* mod1.mlmodel */,
 				0C26373523E065EA0017A846 /* ViewController+CoachingOverlay.swift */,
 				E1635E2D23D736E70031A7D8 /* Extensions.swift */,
 				E136397F23EB064300668585 /* RoundedButton.swift */,
@@ -181,6 +184,7 @@
 				E136398023EB064300668585 /* RoundedButton.swift in Sources */,
 				E1635E1623D5BDFD0031A7D8 /* AppDelegate.swift in Sources */,
 				E1635E2E23D736E70031A7D8 /* Extensions.swift in Sources */,
+				20A114BC270F7D8A00023BBC /* mod1.mlmodel in Sources */,
 				0C26373623E065EB0017A846 /* ViewController+CoachingOverlay.swift in Sources */,
 				20A114B826E564FC00023BBC /* ahh.mlmodel in Sources */,
 				20A114BA26E56B1A00023BBC /* ahh2.mlmodel in Sources */,
