@@ -264,40 +264,40 @@ class ViewController: UIViewController, ARSessionDelegate {
                     
                     
                     // certain objects which override the lidar classification
-                    let overrideClassifications = ["people"]
-                    for c in overrideClassifications {
-                        print("aaa")
-                        print(currentMLClassification)
-                        print("end aaaa")
-                        var temp = currentMLClassification
-                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
-                        print("start")
-                        print(temp)
-                        print("end")
-                        if (temp.count < 1) {
-                            return
-                        }
-                        let components = temp.components(separatedBy: " ")
-                        print(components)
-                        var confidence = components[0]
-                        let classification = components[1]
-                        print(classification)
-                        if (classification == c) {
-                            print("daby")
-                            confidence = confidence.replacingOccurrences(of: "(", with: "")
-                            confidence = confidence.replacingOccurrences(of: ")", with: "")
-                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
-                            if (confidence.count > 0) {
-                                let confidenceFloat = Double(confidence)
-                                print(confidenceFloat!)
-                                if (confidenceFloat! >= 0.85) {
-                                    classification_apple = classification
-                                    print("change")
-                                }
-                                print(classification_apple)
-                            }
-                        }
-                    }
+//                    let overrideClassifications = ["people"]
+//                    for c in overrideClassifications {
+//                        print("aaa")
+//                        print(currentMLClassification)
+//                        print("end aaaa")
+//                        var temp = currentMLClassification
+//                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
+//                        print("start")
+//                        print(temp)
+//                        print("end")
+//                        if (temp.count < 1) {
+//                            return
+//                        }
+//                        let components = temp.components(separatedBy: " ")
+//                        print(components)
+//                        var confidence = components[0]
+//                        let classification = components[1]
+//                        print(classification)
+//                        if (classification == c) {
+//                            print("daby")
+//                            confidence = confidence.replacingOccurrences(of: "(", with: "")
+//                            confidence = confidence.replacingOccurrences(of: ")", with: "")
+//                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
+//                            if (confidence.count > 0) {
+//                                let confidenceFloat = Double(confidence)
+//                                print(confidenceFloat!)
+//                                if (confidenceFloat! >= 0.85) {
+//                                    classification_apple = classification
+//                                    print("change")
+//                                }
+//                                print(classification_apple)
+//                            }
+//                        }
+//                    }
                     
 //                    if classification_apple != "None" {
 //                        print(classification_apple + " after")
@@ -335,20 +335,35 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                         let confidenceFloat = Double(confidence)
+                    //                   print(confidenceFloat)
                         if (confidenceFloat! < 0.85) {
-                            return
+                            
+                            if classification_apple != "None" {
+                                print(classification_apple + " after")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
+                                print(classification_apple + "at" + String(dist) + "meters")
+                                utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+                                let synthesizer = AVSpeechSynthesizer()
+                                synthesizer.speak(utterance)
+                                return
+                            }
                         }
-                        
+                        print("WAAABVAVBAVABA")
                         let precdence: [String] = ["people"] // list of important objects
-                        
-                        if precdence.contains(currentMLClassification.lowercased()) {
+                        print("herhsy is a retard")
+                    var c = currentMLClassification.trimmingCharacters(in: .whitespaces)
+                    let dabab = c.components(separatedBy: " ")
+                    print(dabab[1])
+                        if precdence.contains(dabab[1].lowercased()) {
                             let utterance2 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                             let synthesizer2 = AVSpeechSynthesizer()
                             synthesizer2.speak(utterance2)
                             return
                         } else {
-                            if classification_apple != "None"{
+                            print(classification_apple)
+                            if classification_apple != "None" {
+                                
                                 print(classification_apple + " after")
                                 let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
                                 print(classification_apple + "at" + String(dist) + "meters")
