@@ -235,88 +235,37 @@ class ViewController: UIViewController, ARSessionDelegate {
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
         points = GeneratePoints(a: 3, b: 3, array: &points)
+        // go to each point and store distance and classification
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
             startDetection(coord: coord, completionHandler: {
+                //if its finding nothing then add a blank object??
                 if objects.count != points.count && objects.count < 9{
                     //print(String(objects.count) + "yessir")
-                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None"), count: (9-objects.count))
+                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 1000000, classification: "None"), count: (9-objects.count))
                 }
-                
-                if objects.count == points.count {
-                    print(String(objects.count) + " " + String(points.count))
-                    //print("WABABGGAB")
+                //
+                if objects.count == i {
+                    print(String(objects.count) + " " + String(i))
                     var newObj:SectionClassificationObject = objects[0]
-                    let newObjects = objects.sorted {$0.distance < $1.distance}
+                }
+            }
+        }
+        let newObjects = objects.sorted {$0.distance < $1.distance} //sorted by distance        
+        // print("RAAR")
+        // print(newObjects.count)
+        for i in 0...newObjects.count - 1 { //find the closes with an actual classification
+            if newObjects[i].classification != "None" && newObjects[i].classification != ""{
+                newObj = newObjects[i]
+                break
+            }
+            
+        }
+        var classification_apple = newObj.classification
+        let dist = round(newObj.distance * 10) / 10.0 * 3.281
+        print(classification_apple + " prior")
                     
-                   // print("RAAR")
-                   // print(newObjects.count)
-                    for i in 0...newObjects.count - 1 {
-                        if newObjects[i].classification != "None" && newObjects[i].classification != ""{
-                            newObj = newObjects[i]
-                            break
-                        }
-                        
-                    }
-                    var classification_apple = newObj.classification
-                    let dist = round(newObj.distance * 10) / 10.0
-                    print(classification_apple + " prior")
-                    
-                    
-                    // certain objects which override the lidar classification
-//                    let overrideClassifications = ["people"]
-//                    for c in overrideClassifications {
-//                        print("aaa")
-//                        print(currentMLClassification)
-//                        print("end aaaa")
-//                        var temp = currentMLClassification
-//                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
-//                        print("start")
-//                        print(temp)
-//                        print("end")
-//                        if (temp.count < 1) {
-//                            return
-//                        }
-//                        let components = temp.components(separatedBy: " ")
-//                        print(components)
-//                        var confidence = components[0]
-//                        let classification = components[1]
-//                        print(classification)
-//                        if (classification == c) {
-//                            print("daby")
-//                            confidence = confidence.replacingOccurrences(of: "(", with: "")
-//                            confidence = confidence.replacingOccurrences(of: ")", with: "")
-//                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
-//                            if (confidence.count > 0) {
-//                                let confidenceFloat = Double(confidence)
-//                                print(confidenceFloat!)
-//                                if (confidenceFloat! >= 0.85) {
-//                                    classification_apple = classification
-//                                    print("change")
-//                                }
-//                                print(classification_apple)
-//                            }
-//                        }
-//                    }
-                    
-//                    if classification_apple != "None" {
-//                        print(classification_apple + " after")
-//                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
-//                        print(classification_apple + "at" + String(dist) + "meters")
-//                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-//                        let synthesizer = AVSpeechSynthesizer()
-//                        synthesizer.speak(utterance)
-//                    } else {
-                        //print(classification)
-                        //attempt at classification
-//                        var temp = currentMLClassification
-//                        var confidence = ""
-//                        for char in temp {
-//                            confidence.append(char)
-//                            if char == ")" {
-//                                break
-//                            }
-//                        }
+                 
                     
                     let temp = currentMLClassification
                     var confidence = ""
@@ -665,6 +614,5 @@ class ViewController: UIViewController, ARSessionDelegate {
     present(vc, animated: true)
    }
 }
-
 
 
