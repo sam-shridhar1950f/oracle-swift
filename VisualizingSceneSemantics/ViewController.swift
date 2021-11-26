@@ -68,6 +68,7 @@ func GeneratePoints(a: Int, b: Int, array: inout [XYPoint]) -> [XYPoint] { //a i
         for _ in 1...b {
             //adds the values to the array
             array.append(XYPoint(xVal: x, yVal: y))
+            print(String(x) + " " + String(y))
             // increments through all x values boxes fro the given y midpoint
             x += Double(width/a)
         }
@@ -234,38 +235,93 @@ class ViewController: UIViewController, ARSessionDelegate {
         objects.removeAll()
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
-        points = GeneratePoints(a: 3, b: 3, array: &points)
-        // go to each point and store distance and classification
+        points.append(XYPoint(xVal: 195, yVal: 420))
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
+            print(coord)
             startDetection(coord: coord, completionHandler: {
-                //if its finding nothing then add a blank object??
                 if objects.count != points.count && objects.count < 9{
                     //print(String(objects.count) + "yessir")
-                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 1000000, classification: "None"), count: (9-objects.count))
+                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None"), count: (9-objects.count))
                 }
-                //
-                if objects.count == i {
-                    print(String(objects.count) + " " + String(i))
+                
+                if objects.count == points.count {
+                    print(String(objects.count) + " " + String(points.count))
+                    //print("WABABGGAB")
                     var newObj:SectionClassificationObject = objects[0]
-                }
-            }
-        }
-        let newObjects = objects.sorted {$0.distance < $1.distance} //sorted by distance        
-        // print("RAAR")
-        // print(newObjects.count)
-        for i in 0...newObjects.count - 1 { //find the closes with an actual classification
-            if newObjects[i].classification != "None" && newObjects[i].classification != ""{
-                newObj = newObjects[i]
-                break
-            }
-            
-        }
-        var classification_apple = newObj.classification
-        let dist = round(newObj.distance * 10) / 10.0 * 3.281
-        print(classification_apple + " prior")
+                    let newObjects = objects.sorted {$0.distance < $1.distance}
                     
-                 
+                   // print("RAAR")
+                   // print(newObjects.count)
+                    for i in 0...newObjects.count - 1 {
+                        if newObjects[i].classification != "None" && newObjects[i].classification != ""{
+                            newObj = newObjects[i]
+                            break
+                        }
+                        
+                    }
+                    var classification_apple = newObj.classification
+                    print("biggie chees")
+                    print(newObj.distance)
+                    var dist = (round(newObj.distance * 10) / 10.0)*3.281
+                    dist.round()
+                    print(classification_apple + " prior")
+                    
+                    
+                    // certain objects which override the lidar classification
+//                    let overrideClassifications = ["people"]
+//                    for c in overrideClassifications {
+//                        print("aaa")
+//                        print(currentMLClassification)
+//                        print("end aaaa")
+//                        var temp = currentMLClassification
+//                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
+//                        print("start")
+//                        print(temp)
+//                        print("end")
+//                        if (temp.count < 1) {
+//                            return
+//                        }
+//                        let components = temp.components(separatedBy: " ")
+//                        print(components)
+//                        var confidence = components[0]
+//                        let classification = components[1]
+//                        print(classification)
+//                        if (classification == c) {
+//                            print("daby")
+//                            confidence = confidence.replacingOccurrences(of: "(", with: "")
+//                            confidence = confidence.replacingOccurrences(of: ")", with: "")
+//                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
+//                            if (confidence.count > 0) {
+//                                let confidenceFloat = Double(confidence)
+//                                print(confidenceFloat!)
+//                                if (confidenceFloat! >= 0.85) {
+//                                    classification_apple = classification
+//                                    print("change")
+//                                }
+//                                print(classification_apple)
+//                            }
+//                        }
+//                    }
+                    
+//                    if classification_apple != "None" {
+//                        print(classification_apple + " after")
+//                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
+//                        print(classification_apple + "at" + String(dist) + "feet")
+//                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
+//                        let synthesizer = AVSpeechSynthesizer()
+//                        synthesizer.speak(utterance)
+//                    } else {
+                        //print(classification)
+                        //attempt at classification
+//                        var temp = currentMLClassification
+//                        var confidence = ""
+//                        for char in temp {
+//                            confidence.append(char)
+//                            if char == ")" {
+//                                break
+//                            }
+//                        }
                     
                     let temp = currentMLClassification
                     var confidence = ""
@@ -289,13 +345,15 @@ class ViewController: UIViewController, ARSessionDelegate {
                             
                             if classification_apple != "None" {
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
-                                print(classification_apple + "at" + String(dist) + "meters")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
+                                print(classification_apple + "at" + String(dist) + "feet")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             }
+                            
+                            return
                         }
                         print("WAAABVAVBAVABA")
                         let precdence: [String] = ["people"] // list of important objects
@@ -304,7 +362,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     let dabab = c.components(separatedBy: " ")
                     print(dabab[1])
                         if precdence.contains(dabab[1].lowercased()) {
-                            let utterance2 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
+                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(dist) + "feet")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                             let synthesizer2 = AVSpeechSynthesizer()
                             synthesizer2.speak(utterance2)
@@ -314,14 +372,14 @@ class ViewController: UIViewController, ARSessionDelegate {
                             if classification_apple != "None" {
                                 
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "meters")
-                                print(classification_apple + "at" + String(dist) + "meters")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
+                                print(classification_apple + "at" + String(dist) + "feet")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             } else {
-                                let utterance3 = AVSpeechUtterance(string: currentMLClassification + "at" + String(dist) + "meters")
+                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(dist) + "feet")
                                 utterance3.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer3 = AVSpeechSynthesizer()
                                 synthesizer3.speak(utterance3)
@@ -510,7 +568,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         var meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
         
         // Sort the mesh anchors by distance to the given location and filter out
-        // any anchors that are too far away (4 meters is a safe upper limit).
+        // any anchors that are too far away (4 feet is a safe upper limit).
         let cutoffDistance: Float = 4.0
         meshAnchors.removeAll { distance($0.transform.position, location) > cutoffDistance }
         meshAnchors.sort { distance($0.transform.position, location) < distance($1.transform.position, location) }
@@ -614,5 +672,3 @@ class ViewController: UIViewController, ARSessionDelegate {
     present(vc, animated: true)
    }
 }
-
-
