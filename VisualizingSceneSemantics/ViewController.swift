@@ -68,7 +68,6 @@ func GeneratePoints(a: Int, b: Int, array: inout [XYPoint]) -> [XYPoint] { //a i
         for _ in 1...b {
             //adds the values to the array
             array.append(XYPoint(xVal: x, yVal: y))
-            print(String(x) + " " + String(y))
             // increments through all x values boxes fro the given y midpoint
             x += Double(width/a)
         }
@@ -236,13 +235,16 @@ class ViewController: UIViewController, ARSessionDelegate {
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
         points.append(XYPoint(xVal: 195, yVal: 420))
+        points.append(XYPoint(xVal: 300, yVal: 420))
+
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
             print(coord)
             startDetection(coord: coord, completionHandler: {
+                //adding if it doesnt see anythin
                 if objects.count != points.count && objects.count < 9{
                     //print(String(objects.count) + "yessir")
-                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None"), count: (9-objects.count))
+                    objects += [SectionClassificationObject](repeating: SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 100000, classification: "None"), count: (objects.count))
                 }
                 
                 if objects.count == points.count {
@@ -260,69 +262,40 @@ class ViewController: UIViewController, ARSessionDelegate {
                         }
                         
                     }
-                    var classification_apple = newObj.classification
-                    print("biggie chees")
-                    print(newObj.distance)
-                    var dist = (round(newObj.distance * 10) / 10.0)*3.281
+                    for k in 0...objects.count-1 {
+                        print(objects[k].distance)
+                    }
+                    
+                    var absMin = 10000000.0
+                    var absMinObject = objects[0]
+                    print(objects.count)
+                    for j in 0...objects.count - 1 {
+                        if (objects[j].distance < absMin) {
+                            absMin = objects[j].distance
+                            absMinObject = objects[j]
+//                            print(j)
+                        }
+                    }
+                    
+                    var classification_apple = absMinObject.classification
+                    var dist = (round(absMinObject.distance * 10) / 10.0)*3.281
                     dist.round()
-                    print(classification_apple + " prior")
+                    
+
+                    
+//                    var classification_apple = newObj.classification
+//                    print("biggie chees")
+//                    print(newObj.distance)
+//                    var dist = (round(newObj.distance * 10) / 10.0)*3.281
+//                    dist.round()
+//                    print(classification_apple + " prior")
+                    
+
                     
                     
-                    // certain objects which override the lidar classification
-//                    let overrideClassifications = ["people"]
-//                    for c in overrideClassifications {
-//                        print("aaa")
-//                        print(currentMLClassification)
-//                        print("end aaaa")
-//                        var temp = currentMLClassification
-//                        temp = temp.trimmingCharacters(in: .whitespacesAndNewlines)
-//                        print("start")
-//                        print(temp)
-//                        print("end")
-//                        if (temp.count < 1) {
-//                            return
-//                        }
-//                        let components = temp.components(separatedBy: " ")
-//                        print(components)
-//                        var confidence = components[0]
-//                        let classification = components[1]
-//                        print(classification)
-//                        if (classification == c) {
-//                            print("daby")
-//                            confidence = confidence.replacingOccurrences(of: "(", with: "")
-//                            confidence = confidence.replacingOccurrences(of: ")", with: "")
-//                            confidence = confidence.trimmingCharacters(in: .whitespacesAndNewlines)
-//                            if (confidence.count > 0) {
-//                                let confidenceFloat = Double(confidence)
-//                                print(confidenceFloat!)
-//                                if (confidenceFloat! >= 0.85) {
-//                                    classification_apple = classification
-//                                    print("change")
-//                                }
-//                                print(classification_apple)
-//                            }
-//                        }
-//                    }
                     
-//                    if classification_apple != "None" {
-//                        print(classification_apple + " after")
-//                        let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
-//                        print(classification_apple + "at" + String(dist) + "feet")
-//                        utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
-//                        let synthesizer = AVSpeechSynthesizer()
-//                        synthesizer.speak(utterance)
-//                    } else {
-                        //print(classification)
-                        //attempt at classification
-//                        var temp = currentMLClassification
-//                        var confidence = ""
-//                        for char in temp {
-//                            confidence.append(char)
-//                            if char == ")" {
-//                                break
-//                            }
-//                        }
                     
+                    //hierarchy
                     let temp = currentMLClassification
                     var confidence = ""
                     for char in temp {
