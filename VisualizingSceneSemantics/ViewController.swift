@@ -62,8 +62,8 @@ func GeneratePoints(a: Int, b: Int, array: inout [XYPoint]) -> [XYPoint] { //a i
     //create array here
     // var points = [XYPoint]()
     //starting point on the x and y coordinates
-    var x : Double = Double(1/2 * width * (1/a))
-    var y : Double = Double(1/2 * height * (1/b))
+    var x : Double = Double(0.5) * Double(width) * Double(1)/Double(a)
+    var y : Double = Double(0.5) * Double(height) * Double(1)/Double(b)
     
     for _ in 1...a {
         for _ in 1...b {
@@ -72,7 +72,7 @@ func GeneratePoints(a: Int, b: Int, array: inout [XYPoint]) -> [XYPoint] { //a i
             // increments through all x values boxes fro the given y midpoint
             x += Double(width/a)
         }
-        x = Double(1/2 * width * (1/a)) //resets the x coord to initial
+        x = Double(0.5) * Double(width) * Double(1)/Double(a) //resets the x coord to initial
         y += Double(height/b) //increment the y coord to the next set of boxes
     }
     
@@ -194,7 +194,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                         self?.processClassifications(for: request, error: error, completionHandler: {classification in
                             classificationList.append(classification)
-                            print(classification + " CoreML")
+                            //print(classification + " CoreML")
                             if (count == 1) {
                                 currentMLClassification = classification
                                 count+=1
@@ -210,7 +210,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     return request
                         
                     } catch {
-                      print("eror :(")
+                      //print("eror :(")
                         return nil
                     }
                 }()
@@ -232,18 +232,18 @@ class ViewController: UIViewController, ARSessionDelegate {
                          completion handler `processClassifications(_:error:)` catches errors specific
                          to processing that request.
                          */
-                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                        //print("Failed to perform classification.\n\(error.localizedDescription)")
                     }
                 }
         //var objects = [SectionClassificationObject]()
         
             startDetection(completionHandler: {
-                print("2")
+                //print("2")
                 //adding if it doesnt see anythin
                 
-                print("3")
-                print(objects.count)
-                print(points.count)
+                //print("3")
+                //print(objects.count)
+                //print(points.count)
                 if objects.count == points.count {
 //
 //                    print(String(objects.count) + " " + String(points.count))
@@ -260,30 +260,25 @@ class ViewController: UIViewController, ARSessionDelegate {
 //                        }
 //
 //                    }
-                    for k in 0...objects.count-1 {
-                        print(k)
-                        print(points[k])
-                        print(objects[k].distance)
-                        print(objects[k].classification)
-
-                    }
-                    print("4")
+                    
+                    //print("4")
                     var absMin = 10000000.0
                     var absMinObject = objects[0]
-                    print(objects.count)
+                    //print(objects.count)
                     for j in 0...objects.count - 1 {
+                        print("curr distance: " + String(objects[j].distance))
                         if (objects[j].distance < absMin) {
                             absMin = objects[j].distance
                             absMinObject = objects[j]
 //                            print(j)
                         }
                     }
-                    print("object class " + String(objects[0].classification))
+                    //print("object class " + String(objects[0].classification))
                     
                     var classification_apple = absMinObject.classification
                     var dist = (round(absMinObject.distance * 10) / 10.0)*3.281
                     dist.round()
-                    print(String(absMinObject.distance) + " " + String(classification_apple))
+                    //print(String(absMinObject.distance) + " " + String(classification_apple))
                     
 
                     
@@ -332,12 +327,12 @@ class ViewController: UIViewController, ARSessionDelegate {
                             
                             return
                         }
-                        print("WAAABVAVBAVABA")
+                        //print("WAAABVAVBAVABA")
                         let precdence: [String] = ["people"] // list of important objects
-                        print("herhsy is a retard")
+                        //print("herhsy is a retard")
                     var c = currentMLClassification.trimmingCharacters(in: .whitespaces)
                     let dabab = c.components(separatedBy: " ")
-                    print(dabab[1])
+                    //print(dabab[1])
                         if precdence.contains(dabab[1].lowercased()) {
                             let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(dist) + "feet")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
@@ -413,9 +408,9 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         @objc func imageSaveHandler(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
             if error != nil {
-                print("Error saving picture")
+                //print("Error saving picture")
             } else {
-                print("Image saved successfully")
+                //print("Image saved successfully")
             }
         }
     
@@ -459,6 +454,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                             let result = self.model(for: classification)
                             let distanceAtXYPoint = result.0
                             let _classification = result.1
+                            print(String(points[i].getX()) + " " + String(points[i].getY()) + " " + String(distanceAtXYPoint) + String(_classification))
+
 
                             // 6. Scale the text depending on the distance, such that it always appears with
                             //    the same size on screen.
@@ -494,12 +491,12 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
         while objects.count < points.count {
             //print(String(objects.count) + "yessir")
-            print("bab")
+            //print("bab")
             var tempobject = SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 100000, classification: "None")
             objects.append(tempobject)
         }
-        print("check after")
-        print(objects.count)
+        //print("check after")
+        //print(objects.count)
         completionHandler()
         objects.removeAll()
         }
