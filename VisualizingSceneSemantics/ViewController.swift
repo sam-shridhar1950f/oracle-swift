@@ -267,7 +267,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     //print(objects.count)
                     for j in 0...objects.count - 1 {
                         print("curr distance: " + String(objects[j].distance))
-                        if (objects[j].distance < absMin) {
+                        if (objects[j].distance > 0 && objects[j].distance < absMin) {
                             absMin = objects[j].distance
                             absMinObject = objects[j]
 //                            print(j)
@@ -427,6 +427,7 @@ class ViewController: UIViewController, ARSessionDelegate {
 
         for i in 0...points.count-1 {
             let location = CGPoint(x: points[i].getX(), y: points[i].getY())
+            print(location)
             let result = arView.raycast(from: location, allowing: .existingPlaneInfinite, alignment: .any)
                
                 if let result = arView.raycast(from: location, allowing: .estimatedPlane, alignment: .any).first {
@@ -492,7 +493,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         while objects.count < points.count {
             //print(String(objects.count) + "yessir")
             //print("bab")
-            var tempobject = SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 100000, classification: "None")
+            var tempobject = SectionClassificationObject(direction: "None", coord: XYPoint(xVal: 0, yVal: 0), distance: 0, classification: "None")
             objects.append(tempobject)
         }
         //print("check after")
