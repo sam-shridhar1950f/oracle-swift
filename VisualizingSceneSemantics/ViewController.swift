@@ -235,7 +235,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         objects.removeAll()
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
-        points.append(XYPoint(xVal: 500, yVal: 500))
+        points.append(XYPoint(xVal: 195, yVal: 420))
 //        points.append(XYPoint(xVal: 195, yVal: 420))
 //        points.append(XYPoint(xVal: 300, yVal: 420))
 //        points.append(XYPoint(xVal: 200, yVal: 200))
