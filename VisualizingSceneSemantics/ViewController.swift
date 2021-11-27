@@ -16,6 +16,7 @@ var objects = [SectionClassificationObject]()
 var currentMLClassification = ""
 //var classwaby: String = ""
 var current_classification = ""
+var currMinDistance = 10000.0
 
 struct XYPoint {
     var xVal: Double
@@ -234,8 +235,10 @@ class ViewController: UIViewController, ARSessionDelegate {
         objects.removeAll()
         //var objects = [SectionClassificationObject]()
         var points = [XYPoint]()
-        points.append(XYPoint(xVal: 195, yVal: 420))
-        points.append(XYPoint(xVal: 300, yVal: 420))
+        points.append(XYPoint(xVal: 500, yVal: 500))
+//        points.append(XYPoint(xVal: 195, yVal: 420))
+//        points.append(XYPoint(xVal: 300, yVal: 420))
+//        points.append(XYPoint(xVal: 200, yVal: 200))
 
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
@@ -260,8 +263,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                             newObj = newObjects[i]
                             break
                         }
-                        
                     }
+                    
                     for k in 0...objects.count-1 {
                         print(objects[k].distance)
                     }
@@ -278,10 +281,11 @@ class ViewController: UIViewController, ARSessionDelegate {
                     }
                     
                     var classification_apple = absMinObject.classification
-                    var dist = (round(absMinObject.distance * 10) / 10.0)*3.281
-                    dist.round()
+                    //var dist = (round(absMinObject.distance * 10) / 10.0)*3.281
+                    currMinDistance = (round(currMinDistance * 10) / 10.0)*3.281
+                    currMinDistance.round()
                     
-                    print("classification: " + absMinObject.classification + ", distance: " + String(dist))
+                    print("classification: " + absMinObject.classification + ", distance: " + String(currMinDistance))
                     
                     //hierarchy
                     let temp = currentMLClassification
@@ -306,8 +310,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                             
                             if classification_apple != "None" {
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
-                                print(classification_apple + "at" + String(dist) + "feet")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "feet")
+                                print(classification_apple + "at" + String(currMinDistance) + "feet")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
@@ -323,7 +327,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     let dabab = c.components(separatedBy: " ")
                     print(dabab[1])
                         if precdence.contains(dabab[1].lowercased()) {
-                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(dist) + "feet")
+                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "feet")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                             let synthesizer2 = AVSpeechSynthesizer()
                             synthesizer2.speak(utterance2)
@@ -333,14 +337,14 @@ class ViewController: UIViewController, ARSessionDelegate {
                             if classification_apple != "None" {
                                 
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(dist) + "feet")
-                                print(classification_apple + "at" + String(dist) + "feet")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "feet")
+                                print(classification_apple + "at" + String(currMinDistance) + "feet")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             } else {
-                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(dist) + "feet")
+                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "feet")
                                 utterance3.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer3 = AVSpeechSynthesizer()
                                 synthesizer3.speak(utterance3)
@@ -447,6 +451,10 @@ class ViewController: UIViewController, ARSessionDelegate {
                         let result = self.model(for: classification)
                         let distanceAtXYPoint = result.0
                         let _classification = result.1
+                        
+                        if (distanceAtXYPoint < currMinDistance) {
+                            currMinDistance = distanceAtXYPoint
+                        }
 
                         // 6. Scale the text depending on the distance, such that it always appears with
                         //    the same size on screen.
