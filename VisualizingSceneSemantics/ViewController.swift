@@ -9,7 +9,6 @@ import AVFoundation
 import UIKit
 import CoreML
 //import RealmSwift
-
 var setDist:Float = 0.0
 //var points = [XYPoint]()
 var objects = [SectionClassificationObject]()
@@ -239,7 +238,6 @@ class ViewController: UIViewController, ARSessionDelegate {
 //        points.append(XYPoint(xVal: 195, yVal: 420))
 //        points.append(XYPoint(xVal: 300, yVal: 420))
 //        points.append(XYPoint(xVal: 200, yVal: 200))
-
         for i in 0...points.count - 1 {
             let coord: XYPoint = points[i]
             print(coord)
@@ -282,10 +280,11 @@ class ViewController: UIViewController, ARSessionDelegate {
                     
                     var classification_apple = absMinObject.classification
                     //var dist = (round(absMinObject.distance * 10) / 10.0)*3.281
-                    currMinDistance = (round(currMinDistance * 10) / 10.0)*3.281
+                    //currMinDistance = (round(currMinDistance * 10) / 10.0)*3.281
+                    currMinDistance = currMinDistance * 100
                     currMinDistance.round()
                     
-                    print("classification: " + absMinObject.classification + ", distance: " + String(currMinDistance))
+                    print("classification: " + absMinObject.classification + ", distance: " + String(currMinDistance) + " cm")
                     
                     //hierarchy
                     let temp = currentMLClassification
@@ -310,8 +309,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                             
                             if classification_apple != "None" {
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "feet")
-                                print(classification_apple + "at" + String(currMinDistance) + "feet")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "centimeters")
+                                print(classification_apple + "at" + String(currMinDistance) + "centimeters")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
@@ -327,7 +326,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     let dabab = c.components(separatedBy: " ")
                     print(dabab[1])
                         if precdence.contains(dabab[1].lowercased()) {
-                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "feet")
+                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "centimeters")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                             let synthesizer2 = AVSpeechSynthesizer()
                             synthesizer2.speak(utterance2)
@@ -337,14 +336,14 @@ class ViewController: UIViewController, ARSessionDelegate {
                             if classification_apple != "None" {
                                 
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "feet")
-                                print(classification_apple + "at" + String(currMinDistance) + "feet")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "centimeters")
+                                print(classification_apple + "at" + String(currMinDistance) + "centimeters")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             } else {
-                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "feet")
+                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "centimeters")
                                 utterance3.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer3 = AVSpeechSynthesizer()
                                 synthesizer3.speak(utterance3)
@@ -434,7 +433,6 @@ class ViewController: UIViewController, ARSessionDelegate {
                 let resultAnchor = AnchorEntity(world: result.worldTransform)
                 // resultAnchor.addChild(sphere(radius: 0.01, color: .lightGray))
                 // arView.scene.addAnchor(resultAnchor, removeAfter: 3)
-
                 // 3. Try to get a classification near the tap location.
                 //    Classifications are available per face (in the geometric sense, not human faces).
                 
@@ -460,14 +458,12 @@ class ViewController: UIViewController, ARSessionDelegate {
                         //    the same size on screen.
 //                        let raycastDistance = distance(result.worldTransform.position, self.arView.cameraTransform.translation)
 //                        textEntity.scale = .one * raycastDistance
-
                         // 7. Place the text, facing the camera.
                         var resultWithCameraOrientation = self.arView.cameraTransform
                         resultWithCameraOrientation.translation = textPositionInWorldCoordinates
 //                        let textAnchor = AnchorEntity(world: resultWithCameraOrientation.matrix)
 //                        textAnchor.addChild(textEntity)
 //                        self.arView.scene.addAnchor(textAnchor, removeAfter: 3)
-
                         // 8. Visualize the center of the face (if any was found) for three seconds.
                         //    It is possible that this is nil, e.g. if there was no face close enough to the tap location.
                         if let centerOfFace = centerOfFace {
@@ -611,9 +607,7 @@ class ViewController: UIViewController, ARSessionDelegate {
 
             // Read the data (returns value of type Float)
             // Accessible values : (width-1) * (height-1) = 767 * 575
-
         let distanceAtXYPoint = round(floatBuffer[Int(128 * 96)] * 10) / 10.0 // x and y is x,y coordinate
-
         
         
         if let model = modelsForClassification[classification] {
