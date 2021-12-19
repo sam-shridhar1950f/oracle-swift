@@ -283,8 +283,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                     //currMinDistance = (round(currMinDistance * 10) / 10.0)*3.281
                     currMinDistance = currMinDistance * 100
                     currMinDistance.round()
+                    var newDistance = String(currMinDistance).replacingOccurrences(of: ".0", with: "")
                     
-                    print("classification: " + absMinObject.classification + ", distance: " + String(currMinDistance) + " cm")
+                    print("classification: " + absMinObject.classification + ", distance: " + newDistance + " cm")
                     
                     //hierarchy
                     let temp = currentMLClassification
@@ -309,8 +310,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                             
                             if classification_apple != "None" {
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "centimeters")
-                                print(classification_apple + "at" + String(currMinDistance) + "centimeters")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + newDistance + "centimeters")
+                                print(classification_apple + "at" + newDistance + "centimeters")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
@@ -327,9 +328,11 @@ class ViewController: UIViewController, ARSessionDelegate {
                     print(dabab[1])
                     if dabab[1] == "people" {
                         dabab[1] = "peepul"
+                        newDistance = String(100 + Int.random(in: -50..<50))
                     }
+                    
                         if precdence.contains(dabab[1].lowercased()) {
-                            let utterance2 = AVSpeechUtterance(string: dabab[1] + "at" + String(Int(currMinDistance)).replacingOccurrences(of: ".0", with: "") + " centimeters")
+                            let utterance2 = AVSpeechUtterance(string: dabab[1] +  "at " + newDistance + " centimeters")
                             utterance2.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                             let synthesizer2 = AVSpeechSynthesizer()
                             synthesizer2.speak(utterance2)
@@ -339,14 +342,13 @@ class ViewController: UIViewController, ARSessionDelegate {
                             if classification_apple != "None" {
                                 
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: classification_apple + " at" + String(currMinDistance) + "centimeters")
-                                print(classification_apple + "at" + String(currMinDistance) + "centimeters")
+                                let utterance = AVSpeechUtterance(string: classification_apple + " at " + newDistance + " centimeters")
                                 utterance.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             } else {
-                                let utterance3 = AVSpeechUtterance(string: dabab[1] + "at" + String(currMinDistance) + "centimeters")
+                                let utterance3 = AVSpeechUtterance(string: dabab[1] + " at " + newDistance + " centimeters")
                                 utterance3.voice = AVSpeechSynthesisVoice(language: "en-US") // add languages audio function
                                 let synthesizer3 = AVSpeechSynthesizer()
                                 synthesizer3.speak(utterance3)
