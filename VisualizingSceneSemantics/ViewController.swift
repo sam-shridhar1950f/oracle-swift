@@ -14,7 +14,6 @@ var setDist:Float = 0.0
 //var points = [XYPoint]()
 var objects = [SectionClassificationObject]()
 var currentMLClassification = ""
-//var classwaby: String = ""
 var current_classification = ""
 var currMinDistance = 10000.0
 var globalInterval = 3
@@ -109,8 +108,6 @@ func GeneratePoints(widthParam: Int, heightParam: Int, a: Int, b: Int, array: in
 
 @available(iOS 15.0, *)
 class ViewController: UIViewController, ARSessionDelegate {
-    
-    
     
     @IBOutlet var arView: ARView!
     @IBOutlet weak var imageView: UIImageView!
@@ -282,11 +279,9 @@ class ViewController: UIViewController, ARSessionDelegate {
                 
                 if objects.count == points.count {
                     print(String(objects.count) + " " + String(points.count))
-                    //print("WABABGGAB")
                     var newObj:SectionClassificationObject = objects[0]
                     let newObjects = objects.sorted {$0.distance < $1.distance}
                     
-                   // print("RAAR")
                    // print(newObjects.count)
                     for i in 0...newObjects.count - 1 {
                         if newObjects[i].classification != "None" && newObjects[i].classification != ""{
@@ -368,12 +363,12 @@ class ViewController: UIViewController, ARSessionDelegate {
                                 }
                                 if globalSystem == " inches" {
                                     
-                                    var wabyDaby = currMinDistance / 2.54
-                                    wabyDaby.round()
+                                    var newDistanceTemp = currMinDistance / 2.54
+                                    newDistanceTemp.round()
                                     
                                     
                                     
-                                    newDistance = String(wabyDaby).replacingOccurrences(of: ".0", with: "")
+                                    newDistance = String(newDistanceTemp).replacingOccurrences(of: ".0", with: "")
                                 }
 
                                 print(classification_apple + " after")
@@ -441,40 +436,35 @@ class ViewController: UIViewController, ARSessionDelegate {
                     }
                     
                     if globalSystem == " inches" {
-                        var wabyDaby = currMinDistance / 2.54
-                        wabyDaby.round()
-                        
-                        
-                        
-                        newDistance = String(wabyDaby).replacingOccurrences(of: ".0", with: "")
+                        var newDistanceTemp = currMinDistance / 2.54
+                        newDistanceTemp.round()
+                        newDistance = String(newDistanceTemp).replacingOccurrences(of: ".0", with: "")
                     }
-                    
-                    
-                        if precdence.contains(imageML[1].lowercased()) {
-                            let utterance2 = AVSpeechUtterance(string: imageCall +  "at " + newDistance + globalSystem)
-                            utterance2.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
-                            let synthesizer2 = AVSpeechSynthesizer()
-                            synthesizer2.speak(utterance2)
+                    if precdence.contains(imageML[1].lowercased()) {
+                        let utterance2 = AVSpeechUtterance(string: imageCall +  "at " + newDistance + globalSystem)
+                        utterance2.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
+                        let synthesizer2 = AVSpeechSynthesizer()
+                        synthesizer2.speak(utterance2)
+                        return
+                    } else {
+                        print(classification_apple)
+                        if classification_apple != "None" {
+
+                            print(classification_apple + " after")
+                            let utterance = AVSpeechUtterance(string: appleCall + " at " + newDistance + globalSystem)
+                            utterance.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
+                            let synthesizer = AVSpeechSynthesizer()
+                            synthesizer.speak(utterance)
                             return
                         } else {
-                            print(classification_apple)
-                            if classification_apple != "None" {
-                                
-                                print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: appleCall + " at " + newDistance + globalSystem)
-                                utterance.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
-                                let synthesizer = AVSpeechSynthesizer()
-                                synthesizer.speak(utterance)
-                                return
-                            } else {
-                                let utterance3 = AVSpeechUtterance(string: imageCall + " at " + newDistance + globalSystem)
-                                utterance3.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
-                                let synthesizer3 = AVSpeechSynthesizer()
-                                synthesizer3.speak(utterance3)
-                                return
-                            }
+                            let utterance3 = AVSpeechUtterance(string: imageCall + " at " + newDistance + globalSystem)
+                            utterance3.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
+                            let synthesizer3 = AVSpeechSynthesizer()
+                            synthesizer3.speak(utterance3)
+                            return
                         }
                     }
+                }
                 
             })
             // print(points.count)
@@ -519,7 +509,6 @@ class ViewController: UIViewController, ARSessionDelegate {
             guard let pixelBuffer = arView.session.currentFrame?.capturedImage else {
                 fatalError("ded")
             }
-            //print("1738 IM LIKE HEY WASSUP HELLO")
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer),
            context = CIContext(options: nil),
            cgImage = context.createCGImage(ciImage, from: ciImage.extent),
@@ -608,7 +597,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 }
                 
             } else {
-                //print("WIBBBAA")
+
             }
             
         }
