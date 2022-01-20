@@ -64,12 +64,35 @@ let french = ["plafond", "porte", "sol", "aucun", "siège", "table", "mur", "fen
 let mandarin = ["天花板","门","地板","无","座位","桌子","墙壁","窗户","盒子","汽车","桌子","围栏"," 车库", "人", "楼梯", "桌子", "厕所"]
 let hindi = ["छत", "दरवाजा", "फर्श", "कोई नहीं", "सीट", "टेबल", "दीवार", "खिड़की", "बॉक्स", "कार", "डेस्क", "बाड़", " गेराज", "लोग", "सीढ़ियां", "टेबल", "शौचालय"]
 let arabic = ["سقف" , "باب" , "أرضية" , "بلا" , "مقعد" , "طاولة" , "جدار" , "نافذة" , "صندوق" , "سيارات" , "مكتب" , "أسوار" , " جراج "," أشخاص "," سلالم "," طاولة "," مرحاض "]
-
+let bengali = ["সিলিং", "দরজা", "মেঝে", "কিছুই নয়", "সিট", "টেবিল", "ওয়াল", "জানালা", "বাক্স", "গাড়ি", "ডেস্ক", "বেড়া", গ্যারেজ", "মানুষ", "সিঁড়ি", "টেবিল", "টয়লেট"]
+let russian = ["потолок", "дверь", "пол", "нет", "сиденье", "стол", "стена", "окно", "коробка", "машины", "стол", "заборы", " гараж", "люди", "лестница", "стол", "туалет"]
+let portuguese = ["teto", "porta", "piso", "nenhum", "assento", "mesa", "parede", "janela", "caixa", "carros", "mesa", "cercas", " garagem", "pessoas", "escadas", "mesa", "banheiro"]
+let korean = ["천장", "문", "바닥", "없음", "좌석", "테이블", "벽", "창문", "상자", "자동차", "책상", "담장", " 차고", "사람", "계단", "테이블", "화장실"]
+let japanese = ["天井"、 "ドア"、 "床"、 "なし"、 "座席"、 "テーブル"、 "壁"、 "窓"、 "ボックス"、 "車"、 "机"、 "フェンス"、 " ガレージ」、「人」、「階段」、「テーブル」、「トイレ」]
+let german = ["Decke", "Tür", "Boden", "keine", "Sitz", "Tisch", "Wand", "Fenster", "Box", "Autos", "Schreibtisch", "Zäune", " Garage", "Personen", "Treppe", "Tisch", "Toilette"]
+let hausa = ["rufi", "kofa", "kasa", "babu", "wurin zama", "tebur", "bango", "taga", "akwatin", "motoci", "tebur", "fences", " gareji", "mutane", "matakala", "tebur", "bayan gida"]
+let turkish = ["tavan", "kapı", "zemin", "yok", "koltuk", "masa", "duvar", "pencere", "kutu", "arabalar", "masa", "çitler", " garaj", "insanlar", "merdiven", "masa", "tuvalet"]
+let dutch = ["plafond", "deur", "vloer", "geen", "stoel", "tafel", "muur", "raam", "doos", "auto's", "bureau", "hekken", " garage", "mensen", "trappen", "tafel", "toilet"]
+let vietnamese = ["trần", "cửa", "sàn", "không", "ghế", "bàn", "tường", "cửa sổ", "hộp", "xe hơi", "bàn", "hàng rào", " nhà để xe "," người "," cầu thang "," bàn "," nhà vệ sinh "]
+let indonesian = ["langit-langit", "pintu", "lantai", "tidak ada", "kursi", "meja", "dinding", "jendela", "kotak", "mobil", "meja", "pagar", " garasi", "orang", "tangga", "meja", "toilet"]         
+               
 var spanishDict: [String: String] = [:]
 var frenchDict: [String: String] = [:]
 var mandarinDict: [String: String] = [:]
 var hindiDict: [String: String] = [:]
 var arabicDict: [String: String] = [:]
+var bengaliDict: [String: String] = [:]
+var russianDict: [String: String] = [:]
+var portugueseDict: [String: String] = [:]
+var koreanDict: [String: String] = [:]
+var japaneseDict: [String: String] = [:]
+var germanDict: [String: String] = [:]
+var hausaDict: [String: String] = [:]
+var turkishDict: [String: String] = [:]
+var dutchDict: [String: String] = [:]
+var vietnameseDict: [String: String] = [:]
+var indonesianDict: [String: String] = [:]
+
 
 func fillDicts() {
     for i in 0...english.count - 1 {
@@ -78,6 +101,17 @@ func fillDicts() {
         mandarinDict[english[i]] = mandarin[i]
         hindiDict[english[i]] = hindi[i]
         arabicDict[english[i]] = arabic[i]
+        bengaliDict[english[i]] = bengali[i]
+        russianhDict[english[i]] = russian[i]
+        portugueseDict[english[i]] = portuguese[i]
+        koreanDict[english[i]] = korean[i]
+        japaneseDict[english[i]] = japanese[i]
+        germanDict[english[i]] = german[i]
+        hausaDict[english[i]] = hausa[i]
+        turkishDict[english[i]] = turkish[i]
+        dutchDict[english[i]] = dutch[i]
+        vietnameseDict[english[i]] = vietnamese[i]
+        indonesianDict[english[i]] = indonesian[i]
     }
 }
 
@@ -353,10 +387,44 @@ class ViewController: UIViewController, ARSessionDelegate {
                                     globalLanguage = "zh-Hans"
                                 case "hindi":
                                     appleCall = hindiDict[appleCall]!
-                                    globalLanguage = "hi-HI"
+                                    globalLanguage = "hi-IN"
                                 case "arabic":
                                     appleCall = arabicDict[appleCall]!
                                     globalLanguage = "ar-SA"
+                                case "bengali":
+                                    appleCall = bengaliDict[appleCall]!
+                                    globalLanguage = "hi-IN"
+                               case "russian":
+                                    appleCall = russianDict[appleCall]!
+                                    globalLanguage = "ru-RU"
+                               case "portuguese":
+                                    appleCall = portugueseDict[appleCall]!
+                                    globalLanguage = "pt-BR"
+                               case "korean":
+                                    appleCall = koreanDict[appleCall]!
+                                    globalLanguage = "ko-KR"
+                               case "japanese":
+                                    appleCall = japaneseDict[appleCall]!
+                                    globalLanguage = "ja-JP"
+                               case "german":
+                                    appleCall = germanDict[appleCall]!
+                                    globalLanguage = "de-DE"
+                               case "hausa":
+                                    appleCall = hausaDict[appleCall]!
+                                    globalLanguage = "en-US"
+                               case "turkish":
+                                    appleCall = turkishDict[appleCall]!
+                                    globalLanguage = "tr-TR"
+                               case "dutch":
+                                    appleCall = dutchDict[appleCall]!
+                                    globalLanguage = "nl-NE"
+                               case "vietnamese":
+                                    appleCall = vietnameseDict[appleCall]!
+                                    globalLanguage = "en-US"
+                               case "indonesian":
+                                    appleCall = indonesianDict[appleCall]!
+                                    globalLanguage = "id-ID"
+                              
                                 default:
                                     appleCall = classification_apple.lowercased()
                                     globalLanguage = "en-US"
@@ -427,6 +495,50 @@ class ViewController: UIViewController, ARSessionDelegate {
                         appleCall = arabicDict[appleCall]!
                         imageCall = arabicDict[imageCall]!
                         globalLanguage = "ar-SA"
+                    case "bengali":
+                        appleCall = bengaliDict[appleCall]!
+                        imageCall = bengaliDict[imageCall]!
+                        globalLanguage = "hi-IN"
+                   case "russian":
+                        appleCall = russianDict[appleCall]!
+                        imageCall = russianDict[imageCall]!
+                        globalLanguage = "ru-RU"
+                   case "portuguese":
+                        appleCall = portugueseDict[appleCall]!
+                        imageCall = portugueseDict[imageCall]!
+                        globalLanguage = "pt-BR"
+                   case "korean":
+                        appleCall = koreanDict[appleCall]!
+                        imageCall = koreanDict[imageCall]!
+                        globalLanguage = "ko-KR"
+                   case "japanese":
+                        appleCall = japaneseDict[appleCall]!
+                        imageCall = japaneseDict[imageCall]!
+                        globalLanguage = "ja-JP"
+                   case "german":
+                        appleCall = germanDict[appleCall]!
+                        imageCall = germanDict[imageCall]!
+                        globalLanguage = "de-DE"
+                   case "hausa":
+                        appleCall = hausaDict[appleCall]!
+                        imageCall = hausaDict[imageCall]!
+                        globalLanguage = "en-US"
+                   case "turkish":
+                        appleCall = turkishDict[appleCall]!
+                        imageCall = turkishDict[imageCall]!
+                        globalLanguage = "tr-TR"
+                   case "dutch":
+                        appleCall = dutchDict[appleCall]!
+                        imageCall = dutchDict[imageCall]!
+                        globalLanguage = "nl-NE"
+                   case "vietnamese":
+                        appleCall = vietnameseDict[appleCall]!
+                        imageCall = vietnameseDict[imageCall]!
+                        globalLanguage = "en-US"
+                   case "indonesian":
+                        appleCall = indonesianDict[appleCall]!
+                        imageCall = indonesianDict[imageCall]!
+                        globalLanguage = "id-ID"
                     default:
                         appleCall = classification_apple.lowercased()
                         imageCall = imageML[1].lowercased()
