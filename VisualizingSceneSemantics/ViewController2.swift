@@ -21,7 +21,7 @@ class ViewController2: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     @IBOutlet weak var menu: UIButton!
     @IBOutlet weak var hapticSwitch: UISwitch!
     @IBOutlet weak var langpicker: UIPickerView!
-    var pickerData = ["English", "Spanish", "French", "Mandarin", "Hindi", "Arabic"]
+    var pickerData = ["English", "Spanish", "French", "Mandarin", "Hindi", "Arabic", "Bengali", "Russian", "Portuguese", "Korean", "Japanese", "German", "Hausa", "Turkish", "Dutch", "Vietnamese", "Indonesian"]
 
     
     
