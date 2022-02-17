@@ -1,4 +1,4 @@
-//
+ //
 //  ViewController2.swift
 //  VisualizingSceneSemantics
 //
@@ -21,7 +21,8 @@ class ViewController2: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     @IBOutlet weak var menu: UIButton!
     @IBOutlet weak var hapticSwitch: UISwitch!
     @IBOutlet weak var langpicker: UIPickerView!
-    var pickerData = ["English", "Spanish", "French", "Mandarin", "Hindi", "Arabic", "Bengali", "Russian", "Portuguese", "Korean", "Japanese", "German", "Hausa", "Turkish", "Dutch", "Vietnamese", "Indonesian"]
+    //var pickerData = ["English", "Spanish", "French", "Mandarin", "Hindi", "Arabic", "Bengali", "Russian", "Portuguese", "Korean", "Japanese", "German", "Hausa", "Turkish", "Dutch", "Vietnamese", "Indonesian"]
+    var pickerData = ["English", "Spanish", "French", "Mandarin", "Hindi", "Arabic", "Bengali", "Russian", "Portuguese", "Korean", "Japanese", "German", "Turkish", "Dutch", "Indonesian"]
 
     
     
@@ -57,6 +58,59 @@ class ViewController2: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     }
     func pickerView(_ langpicker: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         globalLang = pickerData[row].lowercased()
+        switch globalLang {
+            case "spanish":
+                globalSystemCall = spanishDict[globalSystem]!
+                globalLanguage = "es-ES"
+            case "french":
+                globalSystemCall = frenchDict[globalSystem]!
+                globalLanguage = "fr-FR"
+            case "mandarin":
+                globalSystemCall = mandarinDict[globalSystem]!
+                globalLanguage = "zh-Hans"
+            case "hindi":
+                globalSystemCall = hindiDict[globalSystem]!
+                globalLanguage = "hi-HI"
+            case "arabic":
+                globalSystemCall = arabicDict[globalSystem]!
+                globalLanguage = "ar-SA"
+            case "bengali":
+                globalSystemCall = bengaliDict[globalSystem]!
+                globalLanguage = "hi-IN"
+           case "russian":
+                globalSystemCall = russianDict[globalSystem]!
+                globalLanguage = "ru-RU"
+           case "portuguese":
+                globalSystemCall = portugueseDict[globalSystem]!
+                globalLanguage = "pt-BR"
+           case "korean":
+                globalSystemCall = koreanDict[globalSystem]!
+                globalLanguage = "ko-KR"
+           case "japanese":
+                globalSystemCall = japaneseDict[globalSystem]!
+                globalLanguage = "ja-JP"
+           case "german":
+                globalSystemCall = germanDict[globalSystem]!
+                globalLanguage = "de-DE"
+           case "hausa":
+                globalSystemCall = hausaDict[globalSystem]!
+                globalLanguage = "en-US"
+           case "turkish":
+                globalSystemCall = turkishDict[globalSystem]!
+                globalLanguage = "tr-TR"
+           case "dutch":
+                globalSystemCall = dutchDict[globalSystem]!
+                globalLanguage = "nl-NE"
+           case "vietnamese":
+                globalSystemCall = vietnameseDict[globalSystem]!
+                globalLanguage = "en-US"
+           case "indonesian":
+                globalSystemCall = indonesianDict[globalSystem]!
+                globalLanguage = "id-ID"
+            default:
+                globalSystemCall = globalSystem
+                globalLanguage = "en-US"
+        }
         print(globalLang)
     }
 
@@ -78,10 +132,10 @@ class ViewController2: UIViewController, UIPickerViewDelegate, UIPickerViewDataS
     
     @IBAction func systemValueChanged(_ sender: Any) {
         if switch_.isOn != true {
-            globalSystem = " inches"
+            globalSystem = "inches"
         }
         else {
-            globalSystem = " centimeters"
+            globalSystem = "centimeters"
         }
     }
     
