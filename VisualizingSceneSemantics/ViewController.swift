@@ -19,7 +19,8 @@ var currMinDistance = 10000.0
 var globalInterval = 3
 var globalLanguage:String = "en-US"
 var globalLang:String = "english"
-var globalSystem:String = " centimeters"
+var globalSystem:String = "centimeters"
+var globalSystemCall:String = "centimeters"
 var hapticBool = true
 
 struct XYPoint {
@@ -58,23 +59,23 @@ struct SectionClassificationObject {
     }
 }
 
-let english = ["ceiling", "door", "floor", "none", "seat", "table", "wall", "window", "box", "cars", "desk", "fences", "garage", "people", "stairs", "table", "toilet"]
-let spanish = ["techo", "puerta", "piso", "ninguno", "asiento", "mesa", "pared", "ventana", "caja", "autos", "escritorio", "vallas", " garaje "," gente "," escaleras "," mesa "," baño "]
-let french = ["plafond", "porte", "sol", "aucun", "siège", "table", "mur", "fenêtre", "boîte", "voitures", "bureau", "clôtures", " garage", "personnes", "escaliers", "table", "toilettes"]
-let mandarin = ["天花板","门","地板","无","座位","桌子","墙壁","窗户","盒子","汽车","桌子","围栏"," 车库", "人", "楼梯", "桌子", "厕所"]
-let hindi = ["छत", "दरवाजा", "फर्श", "कोई नहीं", "सीट", "टेबल", "दीवार", "खिड़की", "बॉक्स", "कार", "डेस्क", "बाड़", " गेराज", "लोग", "सीढ़ियां", "टेबल", "शौचालय"]
-let arabic = ["سقف" , "باب" , "أرضية" , "بلا" , "مقعد" , "طاولة" , "جدار" , "نافذة" , "صندوق" , "سيارات" , "مكتب" , "أسوار" , " جراج "," أشخاص "," سلالم "," طاولة "," مرحاض "]
-let bengali = ["সিলিং", "দরজা", "মেঝে", "কিছুই নয়", "সিট", "টেবিল", "ওয়াল", "জানালা", "বাক্স", "গাড়ি", "ডেস্ক", "বেড়া", গ্যারেজ", "মানুষ", "সিঁড়ি", "টেবিল", "টয়লেট"]
-let russian = ["потолок", "дверь", "пол", "нет", "сиденье", "стол", "стена", "окно", "коробка", "машины", "стол", "заборы", " гараж", "люди", "лестница", "стол", "туалет"]
-let portuguese = ["teto", "porta", "piso", "nenhum", "assento", "mesa", "parede", "janela", "caixa", "carros", "mesa", "cercas", " garagem", "pessoas", "escadas", "mesa", "banheiro"]
-let korean = ["천장", "문", "바닥", "없음", "좌석", "테이블", "벽", "창문", "상자", "자동차", "책상", "담장", " 차고", "사람", "계단", "테이블", "화장실"]
-let japanese = ["天井"、 "ドア"、 "床"、 "なし"、 "座席"、 "テーブル"、 "壁"、 "窓"、 "ボックス"、 "車"、 "机"、 "フェンス"、 " ガレージ」、「人」、「階段」、「テーブル」、「トイレ」]
-let german = ["Decke", "Tür", "Boden", "keine", "Sitz", "Tisch", "Wand", "Fenster", "Box", "Autos", "Schreibtisch", "Zäune", " Garage", "Personen", "Treppe", "Tisch", "Toilette"]
-let hausa = ["rufi", "kofa", "kasa", "babu", "wurin zama", "tebur", "bango", "taga", "akwatin", "motoci", "tebur", "fences", " gareji", "mutane", "matakala", "tebur", "bayan gida"]
-let turkish = ["tavan", "kapı", "zemin", "yok", "koltuk", "masa", "duvar", "pencere", "kutu", "arabalar", "masa", "çitler", " garaj", "insanlar", "merdiven", "masa", "tuvalet"]
-let dutch = ["plafond", "deur", "vloer", "geen", "stoel", "tafel", "muur", "raam", "doos", "auto's", "bureau", "hekken", " garage", "mensen", "trappen", "tafel", "toilet"]
-let vietnamese = ["trần", "cửa", "sàn", "không", "ghế", "bàn", "tường", "cửa sổ", "hộp", "xe hơi", "bàn", "hàng rào", " nhà để xe "," người "," cầu thang "," bàn "," nhà vệ sinh "]
-let indonesian = ["langit-langit", "pintu", "lantai", "tidak ada", "kursi", "meja", "dinding", "jendela", "kotak", "mobil", "meja", "pagar", " garasi", "orang", "tangga", "meja", "toilet"]         
+let english = ["ceiling", "door", "floor", "none", "seat", "table", "wall", "window", "box", "cars", "desk", "fences", "garage", "people", "stairs", "table", "toilet", "Warning, obstacle at", "centimeters", "inches"]
+let spanish = ["techo", "puerta", "piso", "ninguno", "asiento", "mesa", "pared", "ventana", "caja", "autos", "escritorio", "vallas", " garaje "," gente "," escaleras "," mesa "," baño", "Advertencia, obstáculo en", "centímetros", "pulgadas"]
+let french = ["plafond", "porte", "sol", "aucun", "siège", "table", "mur", "fenêtre", "boîte", "voitures", "bureau", "clôtures", " garage", "personnes", "escaliers", "table", "toilettes", "Attention, obstacle à", "centimètres", "pouces"]
+let mandarin = ["天花板","门","地板","无","座位","桌子","墙壁","窗户","盒子","汽车","桌子","围栏"," 车库", "人", "楼梯", "桌子", "厕所", "警告, 障碍物", "厘米","英寸"]
+let hindi = ["छत", "दरवाजा", "फर्श", "कोई नहीं", "सीट", "टेबल", "दीवार", "खिड़की", "बॉक्स", "कार", "डेस्क", "बाड़", " गेराज", "लोग", "सीढ़ियां", "टेबल", "शौचालय", "चेतावनी, बाधा", "सेंटीमीटर", "इंच"]
+let arabic = ["سقف" , "باب" , "أرضية" , "بلا" , "مقعد" , "طاولة" , "جدار" , "نافذة" , "صندوق" , "سيارات" , "مكتب" , "أسوار" , " جراج "," أشخاص "," سلالم "," طاولة "," مرحاض "," تحذير , عقبة عند "," سم "," بوصة "]
+let bengali = ["সিলিং", "দরজা", "মেঝে", "কিছুই নয়", "সিট", "টেবিল", "ওয়াল", "জানালা", "বাক্স", "গাড়ি", "ডেস্ক", "বেড়া", "গ্যারেজ", "মানুষ", "সিঁড়ি", "টেবিল", "টয়লেট", "সতর্কতা, বাধা", "সেন্টিমিটার", "ইঞ্চি"]
+let russian = ["потолок", "дверь", "пол", "нет", "сиденье", "стол", "стена", "окно", "коробка", "машины", "стол", "заборы", " гараж", "люди", "лестница", "стол", "туалет", "Предупреждение, препятствие в", "сантиметры", "дюймы"]
+let portuguese = ["teto", "porta", "piso", "nenhum", "assento", "mesa", "parede", "janela", "caixa", "carros", "mesa", "cercas", " garagem", "pessoas", "escadas", "mesa", "banheiro", "Aviso, obstáculo em", "centímetros", "polegadas"]
+let korean = ["천장", "문", "바닥", "없음", "좌석", "테이블", "벽", "창문", "상자", "자동차", "책상", "담장", " 차고", "사람", "계단", "테이블", "화장실", "경고, 장애물", "센티미터", "인치"]
+let japanese = ["天井", "ドア", "床", "なし", "座席", "テーブル", "壁", "窓", "ボックス", "車", "机", "フェンス", " ガレージ」","「人」","「階段」", "「テーブル」","「トイレ」", "「警告,障害物」","「センチメートル」", "「インチ」"]
+let german = ["Decke", "Tür", "Boden", "keine", "Sitz", "Tisch", "Wand", "Fenster", "Box", "Autos", "Schreibtisch", "Zäune", " Garage", "Personen", "Treppe", "Tisch", "Toilette", "Warnung, Hindernis bei", "Zentimeter", "Zoll"]
+let hausa = ["rufi", "kofa", "kasa", "babu", "wurin zama", "tebur", "bango", "taga", "akwatin", "motoci", "tebur", "fences", " gareji", "mutane", "matakala", "tebur", "bayan gida", "Gargadi, cikas a", "centimeters", "inci"]
+let turkish = ["tavan", "kapı", "zemin", "yok", "koltuk", "masa", "duvar", "pencere", "kutu", "arabalar", "masa", "çitler", " garaj", "insanlar", "merdiven", "masa", "tuvalet", "Uyarı, engel", "santimetre", "inç"]
+let dutch = ["plafond", "deur", "vloer", "geen", "stoel", "tafel", "muur", "raam", "doos", "auto's", "bureau", "hekken", " garage", "mensen", "trappen", "tafel", "toilet", "Waarschuwing, obstakel bij", "centimeter", "inch"]
+let vietnamese = ["trần", "cửa", "sàn", "không", "ghế", "bàn", "tường", "cửa sổ", "hộp", "xe hơi", "bàn", "hàng rào", " nhà để xe "," người "," cầu thang "," bàn "," nhà vệ sinh ", "Cảnh báo, chướng ngại vật tại", "centimet", "inch"]
+let indonesian = ["langit-langit", "pintu", "lantai", "tidak ada", "kursi", "meja", "dinding", "jendela", "kotak", "mobil", "meja", "pagar", " garasi", "orang", "tangga", "meja", "toilet", "Peringatan, rintangan di", "sentimeter", "inci"]
                
 var spanishDict: [String: String] = [:]
 var frenchDict: [String: String] = [:]
@@ -102,7 +103,7 @@ func fillDicts() {
         hindiDict[english[i]] = hindi[i]
         arabicDict[english[i]] = arabic[i]
         bengaliDict[english[i]] = bengali[i]
-        russianhDict[english[i]] = russian[i]
+        russianDict[english[i]] = russian[i]
         portugueseDict[english[i]] = portuguese[i]
         koreanDict[english[i]] = korean[i]
         japaneseDict[english[i]] = japanese[i]
@@ -211,7 +212,7 @@ class ViewController: UIViewController, ARSessionDelegate {
             
             //sleep(5000)
        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
             //print("imageMLy \(Thread.current)")
           
             let timer = Timer.scheduledTimer(timeInterval: TimeInterval(globalInterval), target: self, selector: #selector(self.startDetectionHelper), userInfo: nil, repeats: true)
@@ -429,7 +430,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                                     appleCall = classification_apple.lowercased()
                                     globalLanguage = "en-US"
                                 }
-                                if globalSystem == " inches" {
+                                if globalSystem == "inches" {
                                     
                                     var newDistanceTemp = currMinDistance / 2.54
                                     newDistanceTemp.round()
@@ -440,16 +441,70 @@ class ViewController: UIViewController, ARSessionDelegate {
                                 }
 
                                 print(classification_apple + " after")
-                                let utterance = AVSpeechUtterance(string: appleCall + " at" + newDistance + globalSystem)
-                                print(classification_apple + "at" + newDistance + globalSystem)
+                                let utterance = AVSpeechUtterance(string: appleCall + " at" + newDistance + " " + globalSystemCall)
+                                print(classification_apple + "at" + newDistance + globalSystemCall)
                                 utterance.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
                                 let synthesizer = AVSpeechSynthesizer()
                                 synthesizer.speak(utterance)
                                 return
                             }
                             if (currMinDistance < 75) {
-                                print("Warning object at " + newDistance + globalSystem)
-                                let utterance4 = AVSpeechUtterance(string: "Warning, obstacle at" + newDistance + globalSystem)
+                                var warningCall: String = "Warning, obstacle at"
+                                switch globalLang {
+                                    case "spanish":
+                                        warningCall = spanishDict["Warning, obstacle at"]!
+                                        print("aby")
+                                        globalLanguage = "es-ES"
+                                    case "french":
+                                        warningCall = frenchDict["Warning, obstacle at"]!
+                                        globalLanguage = "fr-FR"
+                                    case "mandarin":
+                                        warningCall = mandarinDict["Warning, obstacle at"]!
+                                        globalLanguage = "zh-Hans"
+                                    case "hindi":
+                                        warningCall = hindiDict["Warning, obstacle at"]!
+                                        globalLanguage = "hi-HI"
+                                    case "arabic":
+                                        warningCall = arabicDict["Warning, obstacle at"]!
+                                        globalLanguage = "ar-SA"
+                                    case "bengali":
+                                        warningCall = bengaliDict["Warning, obstacle at"]!
+                                        globalLanguage = "hi-IN"
+                                   case "russian":
+                                        warningCall = russianDict["Warning, obstacle at"]!
+                                        globalLanguage = "ru-RU"
+                                   case "portuguese":
+                                        warningCall = portugueseDict["Warning, obstacle at"]!
+                                        globalLanguage = "pt-BR"
+                                   case "korean":
+                                        warningCall = koreanDict["Warning, obstacle at"]!
+                                        globalLanguage = "ko-KR"
+                                   case "japanese":
+                                        warningCall = japaneseDict["Warning, obstacle at"]!
+                                        globalLanguage = "ja-JP"
+                                   case "german":
+                                        warningCall = germanDict["Warning, obstacle at"]!
+                                        globalLanguage = "de-DE"
+                                   case "hausa":
+                                        warningCall = hausaDict["Warning, obstacle at"]!
+                                        globalLanguage = "en-US"
+                                   case "turkish":
+                                        warningCall = turkishDict["Warning, obstacle at"]!
+                                        globalLanguage = "tr-TR"
+                                   case "dutch":
+                                        warningCall = dutchDict["Warning, obstacle at"]!
+                                        globalLanguage = "nl-NE"
+                                   case "vietnamese":
+                                        warningCall = vietnameseDict["Warning, obstacle at"]!
+                                        globalLanguage = "en-US"
+                                   case "indonesian":
+                                        warningCall = indonesianDict["Warning, obstacle at"]!
+                                        globalLanguage = "id-ID"
+                                    default:
+                                        globalLanguage = "en-US"
+                                }
+                                print("Warning object at " + newDistance + " " + globalSystemCall)
+                                let utterance4 = AVSpeechUtterance(string: warningCall + " " + newDistance + " " + globalSystemCall)
                                 utterance4.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
                                 let synthesizer4 = AVSpeechSynthesizer()
                                 synthesizer4.speak(utterance4)
@@ -475,85 +530,85 @@ class ViewController: UIViewController, ARSessionDelegate {
                     var imageCall: String = imageML[1].lowercased()
                     print(globalLang)
                     switch globalLang {
-                    case "spanish":
-                        appleCall = spanishDict[appleCall]!
-                        imageCall = spanishDict[imageCall]!
-                        globalLanguage = "es-ES"
-                    case "french":
-                        appleCall = frenchDict[appleCall]!
-                        imageCall = frenchDict[imageCall]!
-                        globalLanguage = "fr-FR"
-                    case "mandarin":
-                        appleCall = mandarinDict[appleCall]!
-                        imageCall = mandarinDict[imageCall]!
-                        globalLanguage = "zh-Hans"
-                    case "hindi":
-                        appleCall = hindiDict[appleCall]!
-                        imageCall = hindiDict[imageCall]!
-                        globalLanguage = "hi-HI"
-                    case "arabic":
-                        appleCall = arabicDict[appleCall]!
-                        imageCall = arabicDict[imageCall]!
-                        globalLanguage = "ar-SA"
-                    case "bengali":
-                        appleCall = bengaliDict[appleCall]!
-                        imageCall = bengaliDict[imageCall]!
-                        globalLanguage = "hi-IN"
-                   case "russian":
-                        appleCall = russianDict[appleCall]!
-                        imageCall = russianDict[imageCall]!
-                        globalLanguage = "ru-RU"
-                   case "portuguese":
-                        appleCall = portugueseDict[appleCall]!
-                        imageCall = portugueseDict[imageCall]!
-                        globalLanguage = "pt-BR"
-                   case "korean":
-                        appleCall = koreanDict[appleCall]!
-                        imageCall = koreanDict[imageCall]!
-                        globalLanguage = "ko-KR"
-                   case "japanese":
-                        appleCall = japaneseDict[appleCall]!
-                        imageCall = japaneseDict[imageCall]!
-                        globalLanguage = "ja-JP"
-                   case "german":
-                        appleCall = germanDict[appleCall]!
-                        imageCall = germanDict[imageCall]!
-                        globalLanguage = "de-DE"
-                   case "hausa":
-                        appleCall = hausaDict[appleCall]!
-                        imageCall = hausaDict[imageCall]!
-                        globalLanguage = "en-US"
-                   case "turkish":
-                        appleCall = turkishDict[appleCall]!
-                        imageCall = turkishDict[imageCall]!
-                        globalLanguage = "tr-TR"
-                   case "dutch":
-                        appleCall = dutchDict[appleCall]!
-                        imageCall = dutchDict[imageCall]!
-                        globalLanguage = "nl-NE"
-                   case "vietnamese":
-                        appleCall = vietnameseDict[appleCall]!
-                        imageCall = vietnameseDict[imageCall]!
-                        globalLanguage = "en-US"
-                   case "indonesian":
-                        appleCall = indonesianDict[appleCall]!
-                        imageCall = indonesianDict[imageCall]!
-                        globalLanguage = "id-ID"
-                    default:
-                        appleCall = classification_apple.lowercased()
-                        imageCall = imageML[1].lowercased()
-                        if imageCall == "people" {
-                            imageCall = "person"
-                        }
+                        case "spanish":
+                            appleCall = spanishDict[appleCall]!
+                            imageCall = spanishDict[imageCall]!
+                            globalLanguage = "es-ES"
+                        case "french":
+                            appleCall = frenchDict[appleCall]!
+                            imageCall = frenchDict[imageCall]!
+                            globalLanguage = "fr-FR"
+                        case "mandarin":
+                            appleCall = mandarinDict[appleCall]!
+                            imageCall = mandarinDict[imageCall]!
+                            globalLanguage = "zh-Hans"
+                        case "hindi":
+                            appleCall = hindiDict[appleCall]!
+                            imageCall = hindiDict[imageCall]!
+                            globalLanguage = "hi-HI"
+                        case "arabic":
+                            appleCall = arabicDict[appleCall]!
+                            imageCall = arabicDict[imageCall]!
+                            globalLanguage = "ar-SA"
+                        case "bengali":
+                            appleCall = bengaliDict[appleCall]!
+                            imageCall = bengaliDict[imageCall]!
+                            globalLanguage = "hi-IN"
+                       case "russian":
+                            appleCall = russianDict[appleCall]!
+                            imageCall = russianDict[imageCall]!
+                            globalLanguage = "ru-RU"
+                       case "portuguese":
+                            appleCall = portugueseDict[appleCall]!
+                            imageCall = portugueseDict[imageCall]!
+                            globalLanguage = "pt-BR"
+                       case "korean":
+                            appleCall = koreanDict[appleCall]!
+                            imageCall = koreanDict[imageCall]!
+                            globalLanguage = "ko-KR"
+                       case "japanese":
+                            appleCall = japaneseDict[appleCall]!
+                            imageCall = japaneseDict[imageCall]!
+                            globalLanguage = "ja-JP"
+                       case "german":
+                            appleCall = germanDict[appleCall]!
+                            imageCall = germanDict[imageCall]!
+                            globalLanguage = "de-DE"
+                       case "hausa":
+                            appleCall = hausaDict[appleCall]!
+                            imageCall = hausaDict[imageCall]!
+                            globalLanguage = "en-US"
+                       case "turkish":
+                            appleCall = turkishDict[appleCall]!
+                            imageCall = turkishDict[imageCall]!
+                            globalLanguage = "tr-TR"
+                       case "dutch":
+                            appleCall = dutchDict[appleCall]!
+                            imageCall = dutchDict[imageCall]!
+                            globalLanguage = "nl-NE"
+                       case "vietnamese":
+                            appleCall = vietnameseDict[appleCall]!
+                            imageCall = vietnameseDict[imageCall]!
+                            globalLanguage = "en-US"
+                       case "indonesian":
+                            appleCall = indonesianDict[appleCall]!
+                            imageCall = indonesianDict[imageCall]!
+                            globalLanguage = "id-ID"
+                        default:
+                            appleCall = classification_apple.lowercased()
+                            imageCall = imageML[1].lowercased()
+                            if imageCall == "people" {
+                                imageCall = "person"
+                            }
                     }
                     
-                    if globalSystem == " inches" {
+                    if globalSystem == "inches" {
                         var newDistanceTemp = currMinDistance / 2.54
                         newDistanceTemp.round()
                         newDistance = String(newDistanceTemp).replacingOccurrences(of: ".0", with: "")
                     }
                     if precdence.contains(imageML[1].lowercased()) {
-                        let utterance2 = AVSpeechUtterance(string: imageCall +  "at " + newDistance + globalSystem)
+                        let utterance2 = AVSpeechUtterance(string: imageCall +  "at " + newDistance + " " + globalSystemCall)
                         utterance2.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
                         let synthesizer2 = AVSpeechSynthesizer()
                         synthesizer2.speak(utterance2)
@@ -563,13 +618,13 @@ class ViewController: UIViewController, ARSessionDelegate {
                         if classification_apple != "None" {
 
                             print(classification_apple + " after")
-                            let utterance = AVSpeechUtterance(string: appleCall + " at " + newDistance + globalSystem)
+                            let utterance = AVSpeechUtterance(string: appleCall + " at " + newDistance + " " + globalSystemCall)
                             utterance.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
                             let synthesizer = AVSpeechSynthesizer()
                             synthesizer.speak(utterance)
                             return
                         } else {
-                            let utterance3 = AVSpeechUtterance(string: imageCall + " at " + newDistance + globalSystem)
+                            let utterance3 = AVSpeechUtterance(string: imageCall + " at " + newDistance + " " + globalSystemCall)
                             utterance3.voice = AVSpeechSynthesisVoice(language: globalLanguage) // add languages audio function
                             let synthesizer3 = AVSpeechSynthesizer()
                             synthesizer3.speak(utterance3)
