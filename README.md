@@ -41,7 +41,7 @@ To alleviate the stressors experienced by the visually impaired when traversing 
 
 <br>
 
-<h3>Honors & Awards</h3>
+<h3>Honors & Awards 🏆</h3>
 <ul>
   <li>1st Place in the Georgia Junior Science & Humanities Symposium</li>
   <li>1st Place in the GSMST Science & Engineering Fair</li>
